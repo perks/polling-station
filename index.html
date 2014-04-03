@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Polling widget test</title>
+    <link href="./assets/css/polling.css" rel="stylesheet">
+</head>
+
+<body>
+    <h1>Polling Widget test</h1>
+
+    <section id="polling-container">
+        <div id="polling-widget" class="polling-widget">
+        </div>
+    </section>
+
+
+    <script id="choice-template" type="text/x-handlebars-template">
+        <h1>This is a CHOICES single poll view:::</h1>
+        <h2>{{ question }}</h2>
+        <div class="single-poll">
+            {{#each choices}}
+                <div class="poll-choice" data-id={{@index}}>{{ title }}</div>
+            {{/each}}
+        </div>
+    </script>
+
+    <script id="result-template" type="text/x-handlebars-template">
+    <h1>This is a RESULTS single poll view:</h1>
+    <h2>Results</h2>
+    <div class="single-poll">
+        {{#each choices}}
+            <div class="poll-result" data-id={{@index}}> {{title}} : {{ count }} which is {{ percent }} percent </div>
+        {{/each}}
+    </div>
+    </script>
+
+    <script src="index.js"></script>
+    <script src="bower_components/jquery/jquery.js"></script>
+    <script src="bower_components/handlebars/handlebars.js"></script>
+
+
+    <script type="text/javascript">
+    function PollingWidget(el, poll) {
+
+        var that = this;
+        this.parent = parent;
+        this.poll = poll || loadFromStorage();
+
+    }
+
+    var poll = {
+        "question": "Did I want a fake data model?",
+        "choices": [{
+            "title": "Yes",
+            "count": 10,
+            "percent": 0
+        }, {
+            "title": "No",
+            "count": 20,
+            "percent": 0
+        }],
+        "total": 0
+    }
+    </script>
+
+</body>
+
+</html>

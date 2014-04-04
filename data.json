@@ -1,0 +1,13 @@
+{
+    "question": "Did I want a fake data model?",
+    "choices": [{
+        "title": "Yes",
+        "count": 10,
+        "percent": 0
+        }, {
+        "title": "No",
+        "count": 20,
+        "percent": 0
+        }],
+    "total": 0
+}

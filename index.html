@@ -19,7 +19,7 @@
     <script id="choice-template" type="text/x-handlebars-template">
         <h1>This is a CHOICES single poll view:::</h1>
         <h2>{{ question }}</h2>
-        <div class="single-poll">
+        <div id="poll-choices" class="poll-choices">
             {{#each choices}}
                 <div class="poll-choice" data-id={{@index}}>{{ title }}</div>
             {{/each}}

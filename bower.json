@@ -1,6 +1,6 @@
 {
   "name": "polling-widget",
-  "main": "index.js",
+  "main": "polling.js",
   "version": "0.0.1",
   "homepage": "https://github.com/perks/polling-widget",
   "authors": [
@@ -22,7 +22,6 @@
     "tests"
   ],
   "dependencies": {
-    "jquery": "1.10.0",
     "handlebars": "~1.3.0"
   }
 }

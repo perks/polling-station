@@ -12,11 +12,22 @@
 
     <section id="polling-container">
         <div id="polling-widget" class="polling-widget">
+            <div id="question">
+                <div id="poll-choices">
+                    <div class="poll-choice" data-id="0"></div>
+                    <div class="poll-choice" data-id="1"></div>
+                </div>
+                <div id="poll-results">
+                    <div class="poll-result" data-id="0"></div>
+                    <div class="poll-result" data-id="1"></div>
+                </div>
+            </div>
+
         </div>
     </section>
 
 
-    <script id="choices-template" type="text/x-handlebars-template">
+    <script id="poll-template" type="text/x-handlebars-template">
         <h1>This is a CHOICES single poll view:::</h1>
         <h2>{{ question }}</h2>
         <div id="poll-choices" class="poll-choices">
@@ -24,9 +35,7 @@
                 <div class="poll-choice" data-id={{@index}}>{{ title }}</div>
             {{/each}}
         </div>
-    </script>
 
-    <script id="results-template" type="text/x-handlebars-template">
     <h1>This is a RESULTS single poll view:</h1>
     <h2>Results</h2>
     <div class="poll-results">
@@ -38,6 +47,9 @@
 
     <script src="bower_components/handlebars/handlebars.js"></script>
     <script src="polling.js"></script>
+
+
+
 
 </body>
 

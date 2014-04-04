@@ -1,5 +1,5 @@
 {
-    "question": "Did I want a fake data model?",
+    "question": "Is this a model loaded from a url endpoint?",
     "choices": [{
         "title": "Yes",
         "count": 10,

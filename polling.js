@@ -1,158 +1,221 @@
- function PollingWidget(poll, c_template, r_template, local_flag) {
+function PollingWidget(options, poll) {
 
-     var that = this;
-     this.changeEvent = new Event('poll-change');
-     this.url = "";
-     this.use_local = local_flag || 0;
+    var that = this;
 
-     this.el = document.getElementById('polling-widget');
+    var default_template_func = function(poll) {
+        var el = document.getElementById(this.el.replace(/^#/, ''));
+        var forEach = Array.prototype.forEach;
 
-     this.el.addEventListener('poll-change', function(e) {
-         that.renderResults(r_template);
-     }, false);
+        console.log('in default templating');
 
-     if (typeof poll == 'string' || poll instanceof String) {
-         this.url = poll;
-         loadPoll(poll, function(xhr) {
-             that.poll = JSON.parse(xhr.responseText);
-             that.bindPollToChoices(that.renderChoices(c_template));
-         });
-     } else if (local_flag) {
-        console.log('local loading');
-         this.poll = JSON.parse(localStorage.getItem("poll"));
-         this.bindPollToChoices(this.renderChoices(c_template));
-     } else if (typeof poll == 'object' || poll instanceof Object) {
-         this.poll = poll;
-         this.bindPollToChoices(this.renderChoices(c_template));
-     } else {
-         console.log("Poll argument not recognized; functionality may break");
-         this.poll = poll;
-         this.bindPollToChoices(this.renderChoices(c_template));
-     }
 
-     console.log(this.poll.choices[0].count);
- }
+        var question = el.querySelector('#poll-question');
+        var choices = el.querySelectorAll('.poll-choice');
+        var results = el.querySelectorAll('.poll-result');
 
- PollingWidget.prototype.render = function(template_func) {
-     var html = template_func(this.poll);
-     this.el.innerHTML = html;
- }
+        if (question) {
+            question.innerHTML = poll.question;
+        }
 
- PollingWidget.prototype.renderChoices = function(template_func) {
-     this.render(template_func);
-     return document.getElementById('poll-choices');
- }
+        var i = 0;
 
- PollingWidget.prototype.renderResults = function(template_func) {
-     this.render(template_func);
-     return document.getElementById('poll-results');
- }
+        for (var selection in choices) {
+            if (!isNaN(selection)) {
+                choices[selection].innerHTML = poll.choices[i].title;
+            }
+            i++;
+        }
 
- PollingWidget.prototype.bindPollToChoices = function(el) {
-     this.choices = el.querySelectorAll('.poll-choice');
-     var forEach = Array.prototype.forEach;
-     var that = this;
+        var j = 0;
+        for (var selection in results) {
+            console.log(results);
+            if (!isNaN(selection)) {
+                results[selection].innerHTML = poll.choices[j].title + ": " + poll.choices[j].count + " which is " + poll.choices[j].percent
+            }
+            j++;
+        }
+        return el.innerHTML;
 
-     if (this.choices) {
-         forEach.call(that.choices, function(choice) {
-             var selection = choice.getAttribute('data-id');
-             that.choices[selection] = el;
-             choice.addEventListener('click', function(e) {
-                 e.preventDefault();
-                 that.updateSelection(selection);
-                 that.el.dispatchEvent(that.changeEvent);
-             });
-         });
-     }
- }
+    }
 
- PollingWidget.prototype.updateSelection = function(id) {
-     console.log(this.poll.choices[id].count);
-     this.poll.choices[id].count++;
-     console.log(this.poll.choices[id].count);
-     this.recalibratePoll();
-     this.save(this.poll);
- }
+    this.options = {
+        el: options.el || '#polling-widget',
+        url: options.url || '',
+        template: options.template || default_template_func,
+        localStorage: options.localStorage || false,
+    };
 
- PollingWidget.prototype.recalibratePoll = function() {
-     this.poll.total = 0;
-     var choice_arr = this.poll.choices;
-     for (var i in choice_arr) {
-         this.poll.total += choice_arr[i].count;
+    if (poll) {
+        this.poll = poll;
+        this.render(poll);
+        this.bindPollToEvents(this.el);
+    } else {
+        this.poll = this.loadPoll(options);
+    }
 
-     }
-     for (var j in choice_arr) {
-         var percent = Math.round((this.poll.choices[j].count / this.poll.total) * 100);
-         this.poll.choices[j].percent = percent
-     }
- }
+    this.changeEvent = new Event('poll-change');
 
- PollingWidget.prototype.save = function() {
-     console.log('saving poll...');
-     if (this.use_local) {
-         console.log('... to local storage');
-         localStorage.removeItem('poll');
-         localStorage.setItem('poll', JSON.stringify(this.poll));
-     } else if (this.url) {
-         console.log('... to url end point');
+    this.getElement().addEventListener('poll-change', function(e) {
+        that.render(that.poll);
+        that.bindPollToEvents(that.getElement());
+    }, false);
 
-         xhr = new XMLHttpRequest();
 
-         xhr.onreadystatechange = function() {
-             if (xhr.readyState == 4 && xhr.status == 200)
-                 console.log('save successfull!');
-             else
-                 console.log('error saving to url endpoint');
-         }
+}
 
-         xhr.open('POST', this.url, true);
-         xhr.setRequestHeader("Content-Type", "application/json");
-         xhr.send(JSON.stringify(this.poll));
+PollingWidget.prototype.getElement = function() {
+    return document.getElementById(this.options.el.replace(/^#/, ''));
+}
 
-     }
- }
 
- function loadPoll(url, callback) {
-     console.log('loading poll...');
 
-     xhr = new XMLHttpRequest();
+PollingWidget.prototype.loadPoll = function(options) {
+    if (options.localStorage) {
+        var poll = JSON.parse(localStorage.getItem("poll"));
+        this.render(poll);
+        this.bindPollToEvents(this.getElement());
+        return poll;
+    } else if (options.url) {
+        fetchPoll(options.url, callback);
 
-     xhr.onreadystatechange = callbackCheck;
+        function callback(xhr) {
+            var poll = JSON.parse(xhr.responseText);
+            this.render(poll);
+            this.bindPollToEvents(this.el);
+            return poll;
+        }
+    } else {
+        var poll = {
+            "question": "Did I want a default data model?",
+            "choices": [{
+                    "title": "Yes",
+                    "count": 10,
+                    "percent": 0
+                    },
+                {
+                    "title": "No",
+                    "count": 20,
+                    "percent": 0
+                    }],
+            "total": 0
+        };
+        this.render(poll);
+        this.bindPollToEvents(this.el);
+        return poll;
+    }
 
-     function callbackCheck() {
-         if (xhr.readyState < 4) {
-             return;
-         }
+}
 
-         if (xhr.status !== 200) {
-             return;
-         }
+PollingWidget.prototype.render = function(poll) {
+    var html = this.options.template(poll);
+    var el = document.getElementById(this.options.el.replace(/^#/, ''));
+    el.innerHTML = html;
+};
 
-         if (xhr.readyState == 4) {
-             console.log('calling back');
-             callback(xhr);
-         }
-     }
+PollingWidget.prototype.bindPollToEvents = function(el) {
+    this.choices = el.querySelectorAll('.poll-choice');
+    var forEach = Array.prototype.forEach;
+    var that = this;
 
-     xhr.open('GET', url, true);
-     xhr.send(null);
+    if (this.choices) {
+        forEach.call(that.choices, function(choice) {
+            var selection = choice.getAttribute('data-id');
+            that.choices[selection] = el;
+            choice.addEventListener('click', function(e) {
+                e.preventDefault();
+                that.updateSelection(selection);
+                that.getElement().dispatchEvent(that.changeEvent);
+            });
+        });
+    }
+};
 
- }
+PollingWidget.prototype.updateSelection = function(id) {
+    this.poll.choices[id].count++;
+    this.recalibratePoll();
+    this.save(this.poll);
+};
 
- var poll = {
-     "question": "Did I want a fake data model?",
-     "choices": [{
-         "title": "Yes",
-         "count": 10,
-         "percent": 0
+PollingWidget.prototype.recalibratePoll = function() {
+    this.poll.total = 0;
+    var choice_arr = this.poll.choices;
+    for (var i in choice_arr) {
+        this.poll.total += choice_arr[i].count;
+
+    }
+    for (var j in choice_arr) {
+        var percent = Math.round((this.poll.choices[j].count / this.poll.total) * 100);
+        this.poll.choices[j].percent = percent
+    }
+};
+
+PollingWidget.prototype.save = function(poll) {
+    console.log('saving poll...');
+    if (this.options.localStorage) {
+        console.log('... to local storage');
+        localStorage.removeItem('poll');
+        localStorage.setItem('poll', JSON.stringify(poll));
+    } else if (this.options.url) {
+        console.log('... to url end point');
+
+        xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200)
+                console.log('save successfull!');
+            else
+                console.log('error saving to url endpoint');
+        }
+
+        xhr.open('POST', this.url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify(poll));
+
+    }
+};
+
+function fetchPoll(url, callback) {
+
+    xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = callbackCheck;
+
+    function callbackCheck() {
+        if (xhr.readyState < 4) {
+            return;
+        }
+
+        if (xhr.status !== 200) {
+            return;
+        }
+
+        if (xhr.readyState == 4) {
+            console.log('calling back');
+            callback(xhr);
+        }
+    }
+
+    xhr.open('GET', url, true);
+    xhr.send(null);
+
+};
+
+var poll = {
+    "question": "Did I want a fake data model?",
+    "choices": [{
+        "title": "Yes",
+        "count": 10,
+        "percent": 0
         }, {
-         "title": "No",
-         "count": 20,
-         "percent": 0
+        "title": "No",
+        "count": 20,
+        "percent": 0
         }],
-     "total": 0
- };
+    "total": 0
+};
 
- var c_template = Handlebars.compile(document.getElementById('choices-template').innerHTML);
- var r_template = Handlebars.compile(document.getElementById('results-template').innerHTML);
- var myPoll = new PollingWidget(null, c_template, r_template, 1);
+var c_template = Handlebars.compile(document.getElementById('poll-template').innerHTML);
+
+var myPoll = new PollingWidget({
+    localStorage: true
+});

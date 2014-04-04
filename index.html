@@ -16,7 +16,7 @@
     </section>
 
 
-    <script id="choice-template" type="text/x-handlebars-template">
+    <script id="choices-template" type="text/x-handlebars-template">
         <h1>This is a CHOICES single poll view:::</h1>
         <h2>{{ question }}</h2>
         <div id="poll-choices" class="poll-choices">
@@ -26,17 +26,16 @@
         </div>
     </script>
 
-    <script id="result-template" type="text/x-handlebars-template">
+    <script id="results-template" type="text/x-handlebars-template">
     <h1>This is a RESULTS single poll view:</h1>
     <h2>Results</h2>
-    <div class="single-poll">
+    <div class="poll-results">
         {{#each choices}}
             <div class="poll-result" data-id={{@index}}> {{title}} : {{ count }} which is {{ percent }} percent </div>
         {{/each}}
     </div>
     </script>
 
-    <script src="bower_components/jquery/jquery.js"></script>
     <script src="bower_components/handlebars/handlebars.js"></script>
     <script src="polling.js"></script>
 

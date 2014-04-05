@@ -106,6 +106,30 @@ The polling widget object is created with a *context* argument that provides ins
     });
 ```
 
+You can also pass in a local poll-data object as well through the `poll` parameter, to use as a starting point of you have no url endpoint or data in localstorage. Make sure to set the `localStorage` flag  to persist this data:
+
+```javascript
+var local_poll_data = {
+    "question": "Is this a model loaded from a url endpoint?",
+    "choices": [{
+        "title": "Yes",
+        "count": 10,
+        "percent": 0
+        }, {
+        "title": "No",
+        "count": 20,
+        "percent": 0
+        }],
+    "total": 0
+}
+
+var myPollingWidget = new PollingWidget({
+    poll: local_poll_data,
+    localStorage: true
+});
+```
+
+
 Then, once instantiated, start polling with:
 ```javascript
     myPollingWidget.init();

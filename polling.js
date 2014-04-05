@@ -1,91 +1,134 @@
-function PollingWidget(options, poll) {
+function PollingWidget(context) {
 
     var that = this;
 
-    var default_template_func = function(poll) {
-        var el = document.getElementById(this.el.replace(/^#/, ''));
-        var forEach = Array.prototype.forEach;
+    var default_template_func = function(poll_data) {
 
-        console.log('in default templating');
-
-
+        var el = that.getElement();
         var question = el.querySelector('#poll-question');
         var choices = el.querySelectorAll('.poll-choice');
         var results = el.querySelectorAll('.poll-result');
 
-        if (question) {
-            question.innerHTML = poll.question;
-        }
-
-        var i = 0;
+        if (question) question.innerHTML = poll_data.question;
 
         for (var selection in choices) {
-            if (!isNaN(selection)) {
-                choices[selection].innerHTML = poll.choices[i].title;
-            }
-            i++;
+            if (!isNaN(selection))
+                choices[selection].innerHTML = poll_data.choices[selection].title;
         }
 
-        var j = 0;
         for (var selection in results) {
-            console.log(results);
             if (!isNaN(selection)) {
-                results[selection].innerHTML = poll.choices[j].title + ": " + poll.choices[j].count + " which is " + poll.choices[j].percent
+                results[selection].innerHTML = poll_data.choices[selection].title + ": " + poll_data.choices[selection].count + " which is " + poll_data.choices[selection].percent + " percent";
             }
-            j++;
         }
-        return el.innerHTML;
 
+        return el.innerHTML;
     }
 
     this.options = {
-        el: options.el || '#polling-widget',
-        url: options.url || '',
-        template: options.template || default_template_func,
-        localStorage: options.localStorage || false,
+        el: context.el || '#polling-widget',
+        url: context.url || '',
+        template: context.template || default_template_func,
+        localStorage: context.localStorage || false,
+        poll: context.poll || null
     };
 
-    if (poll) {
-        this.poll = poll;
-        this.render(poll);
-        this.bindPollToEvents(this.el);
-    } else {
-        this.poll = this.loadPoll(options);
-    }
+    this.poll = context.poll;
+
 
     this.changeEvent = new Event('poll-change');
-
     this.getElement().addEventListener('poll-change', function(e) {
         that.render(that.poll);
-        that.bindPollToEvents(that.getElement());
-    }, false);
+        that.bindToEvents();
+    });
 
 
+    this.bindToEvents = function() {
+        var choice_options = that.getElement().querySelectorAll('.poll-choice');
+        var forEach = Array.prototype.forEach;
+
+        if (choice_options) {
+            forEach.call(choice_options, function(choice) {
+                var selection = choice.getAttribute('data-id');
+                choice_options[selection] = that.getElement();
+                choice.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    that.updateSelection(selection);
+                    that.getElement().dispatchEvent(that.changeEvent);
+                });
+            });
+        }
+    };
+
+    this.init = function() {
+        if(!that.poll) {
+            that.loadPoll(that.bindToEvents);
+        }
+        else {
+            that.render(that.poll);
+            that.bindToEvents();
+        }
+    };
 }
+
 
 PollingWidget.prototype.getElement = function() {
     return document.getElementById(this.options.el.replace(/^#/, ''));
 }
 
+PollingWidget.prototype.fetchPoll = function(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = readyCheck;
 
+    function readyCheck() {
+        if (xhr.readyState < 4 || xhr.status !== 200) return;
+        if (xhr.readyState == 4) callback(xhr)
+    }
 
-PollingWidget.prototype.loadPoll = function(options) {
-    if (options.localStorage) {
-        var poll = JSON.parse(localStorage.getItem("poll"));
-        this.render(poll);
-        this.bindPollToEvents(this.getElement());
-        return poll;
-    } else if (options.url) {
-        fetchPoll(options.url, callback);
+    xhr.open('GET', url, true);
+    xhr.send(null);
+}
 
-        function callback(xhr) {
-            var poll = JSON.parse(xhr.responseText);
-            this.render(poll);
-            this.bindPollToEvents(this.el);
-            return poll;
+PollingWidget.prototype.save = function(poll_data) {
+    var saved_poll = poll_data || this.poll;
+    this.poll = saved_poll;
+    if (this.options.localStorage) {
+        localStorage.removeItem('poll');
+        localStorage.setItem('poll', JSON.stringify(saved_poll));
+    }
+    if (this.options.url) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200)
+                console.log('save successful');
+            else
+                console.log('error saving');
+        }
+
+        xhr.open('POST', this.url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify(poll_data));
+    }
+}
+
+PollingWidget.prototype.loadPoll = function(callback) {
+    if (!this.options.url && this.options.localStorage) {
+        var loaded = JSON.parse(localStorage.getItem('poll'));
+        this.render(loaded);
+        this.poll = loaded;
+        callback();
+    } else if (this.options.url) {
+        var that = this;
+        this.fetchPoll(this.options.url, onLoad);
+
+        function onLoad(xhr) {
+            var loaded = JSON.parse(xhr.responseText);
+            that.render(loaded);
+            that.poll = loaded;;
+            callback();
         }
     } else {
-        var poll = {
+        var default_poll = {
             "question": "Did I want a default data model?",
             "choices": [{
                     "title": "Yes",
@@ -99,123 +142,35 @@ PollingWidget.prototype.loadPoll = function(options) {
                     }],
             "total": 0
         };
-        this.render(poll);
-        this.bindPollToEvents(this.el);
-        return poll;
+        this.render(default_poll);
+        this.poll = default_poll;
+        callback();
     }
+};
 
+PollingWidget.prototype.render = function(poll_data) {
+    var html = this.options.template(poll_data);
+    this.getElement().innerHTML = html;
 }
-
-PollingWidget.prototype.render = function(poll) {
-    var html = this.options.template(poll);
-    var el = document.getElementById(this.options.el.replace(/^#/, ''));
-    el.innerHTML = html;
-};
-
-PollingWidget.prototype.bindPollToEvents = function(el) {
-    this.choices = el.querySelectorAll('.poll-choice');
-    var forEach = Array.prototype.forEach;
-    var that = this;
-
-    if (this.choices) {
-        forEach.call(that.choices, function(choice) {
-            var selection = choice.getAttribute('data-id');
-            that.choices[selection] = el;
-            choice.addEventListener('click', function(e) {
-                e.preventDefault();
-                that.updateSelection(selection);
-                that.getElement().dispatchEvent(that.changeEvent);
-            });
-        });
-    }
-};
 
 PollingWidget.prototype.updateSelection = function(id) {
     this.poll.choices[id].count++;
-    this.recalibratePoll();
+    this.recalibrate();
     this.save(this.poll);
-};
+}
 
-PollingWidget.prototype.recalibratePoll = function() {
+PollingWidget.prototype.recalibrate = function() {
     this.poll.total = 0;
     var choice_arr = this.poll.choices;
-    for (var i in choice_arr) {
+    for (var i in choice_arr)
         this.poll.total += choice_arr[i].count;
+    for (var j in choice_arr)
+        this.poll.choices[j].percent = Math.round((this.poll.choices[j].count / this.poll.total) * 100);
+}
 
-    }
-    for (var j in choice_arr) {
-        var percent = Math.round((this.poll.choices[j].count / this.poll.total) * 100);
-        this.poll.choices[j].percent = percent
-    }
-};
-
-PollingWidget.prototype.save = function(poll) {
-    console.log('saving poll...');
-    if (this.options.localStorage) {
-        console.log('... to local storage');
-        localStorage.removeItem('poll');
-        localStorage.setItem('poll', JSON.stringify(poll));
-    } else if (this.options.url) {
-        console.log('... to url end point');
-
-        xhr = new XMLHttpRequest();
-
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == 4 && xhr.status == 200)
-                console.log('save successfull!');
-            else
-                console.log('error saving to url endpoint');
-        }
-
-        xhr.open('POST', this.url, true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.send(JSON.stringify(poll));
-
-    }
-};
-
-function fetchPoll(url, callback) {
-
-    xhr = new XMLHttpRequest();
-
-    xhr.onreadystatechange = callbackCheck;
-
-    function callbackCheck() {
-        if (xhr.readyState < 4) {
-            return;
-        }
-
-        if (xhr.status !== 200) {
-            return;
-        }
-
-        if (xhr.readyState == 4) {
-            console.log('calling back');
-            callback(xhr);
-        }
-    }
-
-    xhr.open('GET', url, true);
-    xhr.send(null);
-
-};
-
-var poll = {
-    "question": "Did I want a fake data model?",
-    "choices": [{
-        "title": "Yes",
-        "count": 10,
-        "percent": 0
-        }, {
-        "title": "No",
-        "count": 20,
-        "percent": 0
-        }],
-    "total": 0
-};
-
-var c_template = Handlebars.compile(document.getElementById('poll-template').innerHTML);
 
 var myPoll = new PollingWidget({
-    localStorage: true
+    localStorage: true,
 });
+
+myPoll.init();

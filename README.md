@@ -25,7 +25,7 @@ vanilla-poll.js
 
 ##Description
 
-A standalone library for creating the scaffolding for interactive polls and questionnaires.
+A standalone library that creates scaffolding for interactive polls and questionnaires.
 Has support for saving and fetching from HTML5 localstorage as well as remote API endpoints
 
 Written in 100% plain-jane vanilla JavaScript

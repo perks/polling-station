@@ -61,10 +61,9 @@ function PollingWidget(context) {
     };
 
     this.init = function() {
-        if(!that.poll) {
+        if (!that.poll) {
             that.loadPoll(that.bindToEvents);
-        }
-        else {
+        } else {
             that.render(that.poll);
             that.bindToEvents();
         }
@@ -100,12 +99,14 @@ PollingWidget.prototype.save = function(poll_data) {
     if (this.options.url) {
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
-            if (xhr.readyState == 4 && xhr.status == 200)
-                console.log('save successfull');
-            else {
-                console.log('error saving - defaulting to load from local storage');
-                that.options.url = '';
-                that.options.localStorage = true;
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200)
+                    console.log('save successfull');
+                else {
+                    console.log('error saving - defaulting to load from local storage');
+                    that.options.url = '';
+                    that.options.localStorage = true;
+                }
             }
         }
 
@@ -171,10 +172,3 @@ PollingWidget.prototype.recalibrate = function() {
     for (var j in choice_arr)
         this.poll.choices[j].percent = Math.round((this.poll.choices[j].count / this.poll.total) * 100);
 }
-
-
-var myPoll = new PollingWidget({
-    url: "data.json"
-});
-
-myPoll.init();

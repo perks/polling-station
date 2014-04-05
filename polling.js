@@ -90,6 +90,7 @@ PollingWidget.prototype.fetchPoll = function(url, callback) {
 }
 
 PollingWidget.prototype.save = function(poll_data) {
+    var that = this;
     var saved_poll = poll_data || this.poll;
     this.poll = saved_poll;
     if (this.options.localStorage) {
@@ -100,9 +101,12 @@ PollingWidget.prototype.save = function(poll_data) {
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
             if (xhr.readyState == 4 && xhr.status == 200)
-                console.log('save successful');
-            else
-                console.log('error saving');
+                console.log('save successfull');
+            else {
+                console.log('error saving - defaulting to load from local storage');
+                that.options.url = '';
+                that.options.localStorage = true;
+            }
         }
 
         xhr.open('POST', this.url, true);
@@ -170,7 +174,7 @@ PollingWidget.prototype.recalibrate = function() {
 
 
 var myPoll = new PollingWidget({
-    localStorage: true,
+    url: "data.json"
 });
 
 myPoll.init();

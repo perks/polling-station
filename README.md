@@ -101,7 +101,7 @@ The polling widget object is created with a *context* argument that provides ins
 
 ```javascript
     var myPollingWidget = new PollingWidget({
-        el: #idOfWidgetDiv, // this defaults to #polling-widget
+        el: '#idOfWidgetDiv', // this defaults to #polling-widget
         url: 'api/endpoint', // this defaults to ''
     });
 ```

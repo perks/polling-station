@@ -1,3 +1,34 @@
+//Thanks MDN! https://developer.mozilla.org/en-US/docs/DOM/document.cookie
+(function() {
+    var cookieLib = {
+        getItem: function(sKey) {
+            return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
+        },
+        setItem: function(sKey, sValue, vEnd, sPath, sDomain, bSecure) {
+            if (!sKey || /^(?:expires|max\-age|path|domain|secure)$/i.test(sKey)) {
+                return false;
+            }
+            var sExpires = "";
+            if (vEnd) {
+                switch (vEnd.constructor) {
+                    case Number:
+                        sExpires = vEnd === Infinity ? "; expires=Fri, 31 Dec 9999 23:59:59 GMT" : "; max-age=" + vEnd;
+                        break;
+                    case String:
+                        sExpires = "; expires=" + vEnd;
+                        break;
+                    case Date:
+                        sExpires = "; expires=" + vEnd.toUTCString();
+                        break;
+                }
+            }
+            document.cookie = encodeURIComponent(sKey) + "=" + encodeURIComponent(sValue) + sExpires + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "") + (bSecure ? "; secure" : "");
+            return true;
+        }
+    }
+    window.cookieLib = cookieLib;
+})();
+
 function PollingWidget(context) {
 
     var that = this;
@@ -61,6 +92,7 @@ function PollingWidget(context) {
     };
 
     this.init = function() {
+        cookieLib.setItem('poll-vote', 'true');
         if (!that.poll) {
             that.loadPoll(that.bindToEvents);
         } else {
@@ -117,11 +149,13 @@ PollingWidget.prototype.save = function(poll_data) {
 }
 
 PollingWidget.prototype.loadPoll = function(callback) {
+
     if (!this.options.url && this.options.localStorage) {
         var loaded = JSON.parse(localStorage.getItem('poll'));
         this.render(loaded);
         this.poll = loaded;
         callback();
+
     } else if (this.options.url) {
         var that = this;
         this.fetchPoll(this.options.url, onLoad);
@@ -159,9 +193,14 @@ PollingWidget.prototype.render = function(poll_data) {
 }
 
 PollingWidget.prototype.updateSelection = function(id) {
-    this.poll.choices[id].count++;
-    this.recalibrate();
-    this.save(this.poll);
+    if (!cookieLib.getItem('poll-vote')) {
+        this.poll.choices[id].count++;
+        this.recalibrate();
+        this.save(this.poll);
+    } else {
+        console.log('already voted');
+    }
+
 }
 
 PollingWidget.prototype.recalibrate = function() {

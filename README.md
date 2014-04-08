@@ -53,7 +53,7 @@ The poll-data object must be set with the following schema:
 Property | Subpropertes | Description
 :----| :----| :-----
 **_question_** | | The prompt of the poll; the question being asked
-**_choices_** | *title*, *count*, *percent* | An array of objects that represent the options avaliable for selection <br> <ul><li>*title*: The description of the selection</li><li>*count*: Number of votes on this current selection<li>*percent*: A numeric value between 0-100 that represents the ratio of this selection to the poll total</ul>
+**_answers_** | *value*, *count*, *percent* | An array of objects that represent the options avaliable for selection <br> <ul><li>*value*: The description of the selection</li><li>*count*: Number of votes on this current selection<li>*percent*: A numeric value between 0-100 that represents the ratio of this selection to the poll total</ul>
 **total** |  | The total amount of votes made for all selections in the poll
 
 ### HTML hooks and template rendering
@@ -67,9 +67,9 @@ From this there are two ways to proceed:
 The following HTML schema is needed when writting static HTML elements to the page:
 
 *   Element with CSS id **#polling-question** to display poll question
-*   Container elements with CSS id **#poll-choices** and **#poll-results**
+*   Container elements with CSS id **#poll-answers** and **#poll-results**
     as respective parents (this can be a `<div` or `<ul>`, etc)
-*   Individual elements with CSS group **.poll-choice** and **.poll-result** respectively
+*   Individual elements with CSS group **.poll-answer** and **.poll-result** respectively
     nested under their parent container element, along with a data attribute **data-id** which corresponds to the index # of the poll-data object
 
 Note that there is not much flexibility in rendering the DOM, the default templating function will overwrite anything that does not conform to this standard.
@@ -111,12 +111,12 @@ You can also pass in a local poll-data object as well through the `poll` paramet
 ```javascript
 var local_poll_data = {
     "question": "Is this a model loaded from a url endpoint?",
-    "choices": [{
-        "title": "Yes",
+    "answers": [{
+        "value": "Yes",
         "count": 10,
         "percent": 0
         }, {
-        "title": "No",
+        "value": "No",
         "count": 20,
         "percent": 0
         }],

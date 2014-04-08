@@ -13,9 +13,9 @@
     <section id="polling-container">
         <div id="polling-widget" class="polling-widget">
             <h1 id="poll-question"></h1>
-            <ul id="poll-choices">
-                <li class="poll-choice" data-id="0"></li>
-                <li class="poll-choice" data-id="1"></li>
+            <ul id="poll-answers">
+                <li class="poll-answer" data-id="0"></li>
+                <li class="poll-answer" data-id="1"></li>
             </ul>
             <div id="poll-results">
                 <div class="poll-result" data-id="0"></div>
@@ -32,7 +32,7 @@
     //Example use//
 
     var myPoll = new PollingWidget({
-        url: "data.json"
+        url: "http://policymicapi.apiary-mock.com/v1/polls/1"
     });
 
     myPoll.init();

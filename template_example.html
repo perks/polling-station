@@ -17,19 +17,19 @@
 
     <script id="poll-template" type="text/x-handlebars/template">
 
-        <h1>This is a CHOICES single poll view:::</h1>
+        <h1>This is a answerS single poll view:::</h1>
         <h2>{{ question }}</h2>
-        <div id="poll-choices" class="poll-choices">
-            {{#each choices}}
-                <div class="poll-choice" data-id={{@index}}>{{ title }}</div>
+        <div id="poll-answers" class="poll-answers">
+            {{#each answers}}
+                <div class="poll-answer" data-id={{@index}}>{{ value }}</div>
             {{/each}}
         </div>
 
     <h1>This is a RESULTS single poll view:</h1>
     <h2>Results</h2>
     <div class="poll-results">
-        {{#each choices}}
-            <div class="poll-result" data-id={{@index}}> {{title}} : {{ count }} which is {{ percent }} percent </div>
+        {{#each answers}}
+            <div class="poll-result" data-id={{@index}}> {{value}} : {{ count }} which is {{ percent }} percent </div>
         {{/each}}
     </div>
 
@@ -44,7 +44,7 @@
     //Example use//
     var myCustomTemplateFunc = Handlebars.compile(document.getElementById('poll-template').innerHTML);
     var myPoll = new PollingWidget({
-        url: "data.json",
+        url: "http://policymicapi.apiary-mock.com/v1/polls/1",
         template: myCustomTemplateFunc
     });
 

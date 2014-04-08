@@ -1,13 +1,18 @@
 {
+    "id": 1,
     "question": "Is this a model loaded from a url endpoint?",
-    "choices": [{
+    "answers": [{
+        "id": 1,
         "title": "Yes",
         "count": 10,
         "percent": 0
         }, {
+        "id": 2,
         "title": "No",
         "count": 20,
         "percent": 0
         }],
     "total": 0
 }
+
+

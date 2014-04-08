@@ -24,7 +24,17 @@
             }
             document.cookie = encodeURIComponent(sKey) + "=" + encodeURIComponent(sValue) + sExpires + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "") + (bSecure ? "; secure" : "");
             return true;
-        }
+        },
+        removeItem: function(sKey, sPath, sDomain) {
+            if (!sKey || !this.hasItem(sKey)) {
+                return false;
+            }
+            document.cookie = encodeURIComponent(sKey) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT" + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "");
+            return true;
+        },
+        hasItem: function(sKey) {
+            return (new RegExp("(?:^|;\\s*)" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=")).test(document.cookie);
+        },
     }
     window.cookieLib = cookieLib;
 })();
@@ -37,19 +47,19 @@ function PollingWidget(context) {
 
         var el = that.getElement();
         var question = el.querySelector('#poll-question');
-        var choices = el.querySelectorAll('.poll-choice');
+        var answers = el.querySelectorAll('.poll-answer');
         var results = el.querySelectorAll('.poll-result');
 
         if (question) question.innerHTML = poll_data.question;
 
-        for (var selection in choices) {
+        for (var selection in answers) {
             if (!isNaN(selection))
-                choices[selection].innerHTML = poll_data.choices[selection].title;
+                answers[selection].innerHTML = poll_data.answers[selection].value;
         }
 
         for (var selection in results) {
             if (!isNaN(selection)) {
-                results[selection].innerHTML = poll_data.choices[selection].title + ": " + poll_data.choices[selection].count + " which is " + poll_data.choices[selection].percent + " percent";
+                results[selection].innerHTML = poll_data.answers[selection].value + ": " + poll_data.answers[selection].count + " which is " + poll_data.answers[selection].percent + " percent";
             }
         }
 
@@ -57,6 +67,7 @@ function PollingWidget(context) {
     }
 
     this.options = {
+        id: context.id || 1,
         el: context.el || '#polling-widget',
         url: context.url || '',
         template: context.template || default_template_func,
@@ -65,6 +76,7 @@ function PollingWidget(context) {
     };
 
     this.poll = context.poll;
+    this.id = this.options.id;
 
 
     this.changeEvent = new Event('poll-change');
@@ -75,14 +87,14 @@ function PollingWidget(context) {
 
 
     this.bindToEvents = function() {
-        var choice_options = that.getElement().querySelectorAll('.poll-choice');
+        var answer_options = that.getElement().querySelectorAll('.poll-answer');
         var forEach = Array.prototype.forEach;
 
-        if (choice_options) {
-            forEach.call(choice_options, function(choice) {
-                var selection = choice.getAttribute('data-id');
-                choice_options[selection] = that.getElement();
-                choice.addEventListener('click', function(e) {
+        if (answer_options) {
+            forEach.call(answer_options, function(answer) {
+                var selection = answer.getAttribute('data-id');
+                answer_options[selection] = that.getElement();
+                answer.addEventListener('click', function(e) {
                     e.preventDefault();
                     that.updateSelection(selection);
                     that.getElement().dispatchEvent(that.changeEvent);
@@ -92,9 +104,9 @@ function PollingWidget(context) {
     };
 
     this.init = function() {
-        cookieLib.setItem('poll-vote', 'true');
+        if(cookieLib.getItem('poll-vote')) cookieLib.removeItem('poll-vote');
         if (!that.poll) {
-            that.loadPoll(that.bindToEvents);
+            that.loadPoll(that.id, that.bindToEvents);
         } else {
             that.render(that.poll);
             that.bindToEvents();
@@ -107,8 +119,9 @@ PollingWidget.prototype.getElement = function() {
     return document.getElementById(this.options.el.replace(/^#/, ''));
 }
 
-PollingWidget.prototype.fetchPoll = function(url, callback) {
+PollingWidget.prototype.fetchPoll = function(url, id, callback) {
     var xhr = new XMLHttpRequest();
+    var getUrl = url + '/polls/' + id;
     xhr.onreadystatechange = readyCheck;
 
     function readyCheck() {
@@ -120,45 +133,48 @@ PollingWidget.prototype.fetchPoll = function(url, callback) {
     xhr.send(null);
 }
 
-PollingWidget.prototype.save = function(poll_data) {
+PollingWidget.prototype.save = function(poll_data, answer_id) {
+    cookieLib.setItem('poll-vote', JSON.stringify(poll_data));
     var that = this;
     var saved_poll = poll_data || this.poll;
+    var vote_id = answer_id || this.id;
     this.poll = saved_poll;
+    this.id = vote_id;
     if (this.options.localStorage) {
-        localStorage.removeItem('poll');
-        localStorage.setItem('poll', JSON.stringify(saved_poll));
+        localStorage.removeItem('poll-'+vote_id);
+        localStorage.setItem('poll'+vote_id, JSON.stringify(saved_poll));
     }
     if (this.options.url) {
         var xhr = new XMLHttpRequest();
+        var postUrl = this.options.url + '/polls/' + that.vote_id + '/vote/' + vote_id;
         xhr.onreadystatechange = function() {
             if (xhr.readyState == 4) {
                 if (xhr.status == 200)
                     console.log('save successfull');
                 else {
                     console.log('error saving - defaulting to load from local storage');
-                    that.options.url = '';
+                    that.options.url = null;
                     that.options.localStorage = true;
                 }
             }
         }
 
-        xhr.open('POST', this.url, true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.send(JSON.stringify(poll_data));
+        xhr.open('POST', postUrl, true);
+        xhr.send(null);
     }
 }
 
-PollingWidget.prototype.loadPoll = function(callback) {
+PollingWidget.prototype.loadPoll = function(id, callback) {
 
     if (!this.options.url && this.options.localStorage) {
-        var loaded = JSON.parse(localStorage.getItem('poll'));
+        var loaded = JSON.parse(localStorage.getItem('poll-' + id));
         this.render(loaded);
         this.poll = loaded;
         callback();
 
     } else if (this.options.url) {
         var that = this;
-        this.fetchPoll(this.options.url, onLoad);
+        this.fetchPoll(this.options.url, id, onLoad);
 
         function onLoad(xhr) {
             var loaded = JSON.parse(xhr.responseText);
@@ -169,13 +185,13 @@ PollingWidget.prototype.loadPoll = function(callback) {
     } else {
         var default_poll = {
             "question": "Did I want a default data model?",
-            "choices": [{
-                    "title": "Yes",
+            "answers": [{
+                    "value": "Yes",
                     "count": 10,
                     "percent": 0
                     },
                 {
-                    "title": "No",
+                    "value": "No",
                     "count": 20,
                     "percent": 0
                     }],
@@ -194,7 +210,7 @@ PollingWidget.prototype.render = function(poll_data) {
 
 PollingWidget.prototype.updateSelection = function(id) {
     if (!cookieLib.getItem('poll-vote')) {
-        this.poll.choices[id].count++;
+        this.poll.answers[id].count++;
         this.recalibrate();
         this.save(this.poll);
     } else {
@@ -205,9 +221,9 @@ PollingWidget.prototype.updateSelection = function(id) {
 
 PollingWidget.prototype.recalibrate = function() {
     this.poll.total = 0;
-    var choice_arr = this.poll.choices;
-    for (var i in choice_arr)
-        this.poll.total += choice_arr[i].count;
-    for (var j in choice_arr)
-        this.poll.choices[j].percent = Math.round((this.poll.choices[j].count / this.poll.total) * 100);
+    var answer_arr = this.poll.answers;
+    for (var i in answer_arr)
+        this.poll.total += answer_arr[i].count;
+    for (var j in answer_arr)
+        this.poll.answers[j].percent = Math.round((this.poll.answers[j].count / this.poll.total) * 100);
 }

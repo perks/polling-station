@@ -104,7 +104,7 @@ function PollingWidget(context) {
     };
 
     this.init = function() {
-        if(cookieLib.getItem('poll-vote')) cookieLib.removeItem('poll-vote');
+        if(cookieLib.getItem('poll-vote')) cookieLib.removeItem('poll-vote'); //for dev
         if (!that.poll) {
             that.loadPoll(that.id, that.bindToEvents);
         } else {

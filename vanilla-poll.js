@@ -115,6 +115,7 @@ function PollingWidget(context) {
 
     this.changeEvent = new Event('poll-change');
     this.getElement().addEventListener('poll-change', function(e) {
+        that.unbindToEvents();
         that.swap("poll-answers", "poll-results");
         that.render(that.poll);
         setTimeout(function() {
@@ -124,7 +125,8 @@ function PollingWidget(context) {
                     graphs[i].style.width = that.poll.answers[i].percent + "%";
                 }
             }
-        }, 10);
+        }, 50);
+
 
     });
 
@@ -154,6 +156,22 @@ function PollingWidget(context) {
                 img.onmouseout = function() {
                     img.src = img.src.substring(0, img.src.lastIndexOf('_hover')) + '.png';
                 }
+            });
+        }
+
+    };
+
+
+    this.unbindToEvents = function() {
+
+        var answerImages = that.getElement().querySelectorAll('.poll-answer > img');
+
+        var forEach = Array.prototype.forEach;
+
+        if (answerImages) {
+            forEach.call(answerImages, function(img) {
+                img.onmouseover = null;
+                img.onmouseout = null;
             });
         }
 

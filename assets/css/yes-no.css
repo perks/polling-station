@@ -1,12 +1,12 @@
  #polling-widget {
      position: relative;
-     top: 150px;
+     top: 50px;
      border-bottom: 1px solid #c1c1c1;
      color: #3e3e3e;
      font-family:'Lato', sans-serif;
      margin: 0 auto;
      max-width: 800px;
-     height: 250px;
+     height: 300px;
 
      -webkit-backface-visibility:hidden;
      -webkit-animation: fadein 1.5s;
@@ -63,7 +63,8 @@
  .poll-answer {
      display: inline-block;
      text-align: center;
-     padding: 40px;
+     padding: 40px 20px 20px 20px;
+
  }
  .poll-answer > .text {
      display: block;
@@ -98,7 +99,7 @@
  #poll-results .bar {
      position: relative;
      float: right;
-     width: 80%;
+     width: 75%;
      top: 9px;
  }
  #poll-results .graph {
@@ -119,7 +120,7 @@
      width: 0px;
  }
  #poll-results .graph[data-id="1"] {
-     background-color: #0c6cff;
+     background-color: #147bff;
  }
  #poll-results .graph[data-id="2"] {
      background-color: #fe9e08;

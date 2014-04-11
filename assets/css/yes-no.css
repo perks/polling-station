@@ -73,6 +73,7 @@
      display: none;
      position: relative;
      top: 20%;
+     left: 5%;
      -webkit-animation: fadein 1.5s;
      /* Safari and Chrome */
      -moz-animation: fadein 1.5s;
@@ -85,6 +86,7 @@
  }
  #poll-results > ul {
      list-style: none;
+     padding-left: 0px;
  }
  #poll-results .text {
      position: relative;
@@ -99,8 +101,15 @@
  #poll-results .bar {
      position: relative;
      float: right;
-     width: 75%;
-     top: 9px;
+     width: 85%;
+     top: 10px;
+ }
+
+ @media only screen and (min-width : 320px) and (max-width : 480px) {
+
+     #poll-results .bar {
+          width: 80%;
+     }
  }
  #poll-results .graph {
      height: 7px;

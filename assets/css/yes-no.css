@@ -6,6 +6,15 @@
      margin: 0 auto;
      max-width: 800px;
      height: 250px;
+     -webkit-animation: fadein 2s;
+     /* Safari and Chrome */
+     -moz-animation: fadein 2s;
+     /* Firefox */
+     -ms-animation: fadein 2s;
+     /* Internet Explorer */
+     -o-animation: fadein 2s;
+     /* Opera */
+     animation: fadein 2s;
  }
  .poll-prompt {
      font-size: 12px;
@@ -60,6 +69,15 @@
      display: none;
      position: relative;
      top: 20%;
+     -webkit-animation: fadein 2s;
+     /* Safari and Chrome */
+     -moz-animation: fadein 2s;
+     /* Firefox */
+     -ms-animation: fadein 2s;
+     /* Internet Explorer */
+     -o-animation: fadein 2s;
+     /* Opera */
+     animation: fadein 2s;
  }
  #poll-results > ul {
      list-style: none;
@@ -91,10 +109,10 @@
      clear: both;
  }
  #poll-results .graph {
-    -webkit-transition: width 1s ease-in-out;
-    -moz-transition: width 1s ease-in-out;
-    -o-transition: width 1s ease-in-out;
-    transition: width 1s ease-in-out;
+     -webkit-transition: width 1s ease-in-out;
+     -moz-transition: width 1s ease-in-out;
+     -o-transition: width 1s ease-in-out;
+     transition: width 1s ease-in-out;
      width: 0px;
  }
  #poll-results .graph[data-id="1"] {
@@ -104,3 +122,49 @@
      background-color: #fe9e08;
  }
 
+ @keyframes fadein {
+     from {
+         opacity: 0;
+     }
+     to {
+         opacity: 1;
+     }
+ }
+ /* Firefox */
+ @-moz-keyframes fadein {
+     from {
+         opacity: 0;
+     }
+     to {
+         opacity: 1;
+     }
+ }
+ /* Safari and Chrome */
+ @-webkit-keyframes fadein {
+     from {
+         opacity: 0;
+     }
+     to {
+         opacity: 1;
+     }
+ }
+ /* Internet Explorer */
+ @-ms-keyframes fadein {
+     from {
+         opacity: 0;
+     }
+     to {
+         opacity: 1;
+     }
+ }
+ ​
+ /* Opera */
+ @-o-keyframes fadein {
+     from {
+         opacity: 0;
+     }
+     to {
+         opacity: 1;
+     }
+ }
+ ​

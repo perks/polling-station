@@ -1,0 +1,105 @@
+ #polling-widget {
+     position: relative;
+     border-bottom: 1px solid #c1c1c1;
+     color: #3e3e3e;
+     font-family:'Lato', sans-serif;
+     margin: 0 auto;
+     max-width: 800px;
+     height: 250px;
+ }
+ .poll-prompt {
+     font-size: 12px;
+     font-weight: 400;
+     letter-spacing: 2px;
+     color: #fe9e08;
+     margin-top: 30px;
+     text-align: center;
+     text-transform: uppercase;
+     display: table;
+     white-space: nowrap;
+ }
+ .poll-prompt:before, .poll-prompt:after {
+     border-top: 1px solid #c1c1c1;
+     content:'';
+     display: table-cell;
+     position: relative;
+     top: 0.5em;
+     width: 45%;
+ }
+ .poll-prompt:before {
+     right: 1.5%;
+ }
+ .poll-prompt:after {
+     left: 1.5%;
+ }
+ #poll-question {
+     position: relative;
+     top: 20px;
+     margin: 0 auto;
+     font-size: 20px;
+     text-align: center;
+     font-weight: 400;
+ }
+ #poll-answers {
+     position: relative;
+     padding-left: 0px;
+     margin: 0 auto;
+     top: 20px;
+     padding-right: 20px;
+     text-align: center;
+ }
+ .poll-answer {
+     display: inline-block;
+     text-align: center;
+     padding: 40px;
+ }
+ .poll-answer > .text {
+     display: block;
+ }
+ #poll-results {
+     display: none;
+     position: relative;
+     top: 20%;
+ }
+ #poll-results > ul {
+     list-style: none;
+ }
+ #poll-results .text {
+     position: relative;
+     text-transform: uppercase;
+     letter-spacing: 3px;
+     font-size: 30px;
+     width: 15%;
+     text-align: center;
+     float: left;
+     font-weight: 100;
+ }
+ #poll-results .bar {
+     position: relative;
+     float: right;
+     width: 80%;
+     top: 9px;
+ }
+ #poll-results .graph {
+     height: 7px;
+     background-color: blue;
+ }
+ #poll-results .graph-caption {
+     font-size: 12px;
+ }
+ #poll-results li {
+     clear: both;
+ }
+ #poll-results .graph {
+    -webkit-transition: width 1s ease-in-out;
+    -moz-transition: width 1s ease-in-out;
+    -o-transition: width 1s ease-in-out;
+    transition: width 1s ease-in-out;
+ }
+ #poll-results .graph[data-id="1"] {
+     background-color: #0c6cff;
+ }
+ #poll-results .graph[data-id="2"] {
+     background-color: #fe9e08;
+ }
+

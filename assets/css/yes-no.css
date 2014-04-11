@@ -1,20 +1,23 @@
  #polling-widget {
      position: relative;
+     top: 150px;
      border-bottom: 1px solid #c1c1c1;
      color: #3e3e3e;
      font-family:'Lato', sans-serif;
      margin: 0 auto;
      max-width: 800px;
      height: 250px;
-     -webkit-animation: fadein 2s;
+
+     -webkit-backface-visibility:hidden;
+     -webkit-animation: fadein 1.5s;
      /* Safari and Chrome */
-     -moz-animation: fadein 2s;
+     -moz-animation: fadein 1.5s;
      /* Firefox */
-     -ms-animation: fadein 2s;
+     -ms-animation: fadein 1.5s;
      /* Internet Explorer */
-     -o-animation: fadein 2s;
+     -o-animation: fadein 1.5s;
      /* Opera */
-     animation: fadein 2s;
+     animation: fadein 1.5s;
  }
  .poll-prompt {
      font-size: 12px;
@@ -69,15 +72,15 @@
      display: none;
      position: relative;
      top: 20%;
-     -webkit-animation: fadein 2s;
+     -webkit-animation: fadein 1.5s;
      /* Safari and Chrome */
-     -moz-animation: fadein 2s;
+     -moz-animation: fadein 1.5s;
      /* Firefox */
-     -ms-animation: fadein 2s;
+     -ms-animation: fadein 1.5s;
      /* Internet Explorer */
-     -o-animation: fadein 2s;
+     -o-animation: fadein 1.5s;
      /* Opera */
-     animation: fadein 2s;
+     animation: fadein 1.5s;
  }
  #poll-results > ul {
      list-style: none;
@@ -90,7 +93,7 @@
      width: 15%;
      text-align: center;
      float: left;
-     font-weight: 100;
+     font-weight: 300;
  }
  #poll-results .bar {
      position: relative;
@@ -109,10 +112,10 @@
      clear: both;
  }
  #poll-results .graph {
-     -webkit-transition: width 1s ease-in-out;
-     -moz-transition: width 1s ease-in-out;
-     -o-transition: width 1s ease-in-out;
-     transition: width 1s ease-in-out;
+     -webkit-transition: width 2s ease-in-out;
+     -moz-transition: width 2s ease-in-out;
+     -o-transition: width 2s ease-in-out;
+     transition: width 2s ease-in-out;
      width: 0px;
  }
  #poll-results .graph[data-id="1"] {

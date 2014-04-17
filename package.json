@@ -1,0 +1,35 @@
+{
+  "name": "polling-station",
+  "version": "0.0.1",
+  "description": "An embeddable, modular, and standalone widget for custom polls",
+  "main": "polling-station.js",
+  "directories": {
+    "example": "examples"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/perks/polling-station.git"
+  },
+  "keywords": [
+    "poll",
+    "polling",
+    "javascript",
+    "js",
+    "module",
+    "widget"
+  ],
+  "author": "Chris Evans",
+  "copyright" : "2014",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/perks/polling-station/issues"
+  },
+  "homepage": "https://github.com/perks/polling-station",
+  "devDependencies": {
+    "grunt": "^0.4.4",
+    "grunt-contrib-uglify": "^0.4.0",
+    "grunt-contrib-sass": "^0.7.3",
+    "grunt-contrib-watch": "^0.6.1",
+    "matchdep": "^0.3.0"
+  }
+}

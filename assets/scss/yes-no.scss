@@ -1,11 +1,11 @@
-$pollBorderColor = #c1c1c1;
-$pollTextColor = #3e3e3e;
-$pollPromptColor = #fe9e08;
-$pollGraphYesColor = #147bff;
-$pollGraphNoColor = #fe9e08;
+$pollBorderColor: #c1c1c1;
+$pollTextColor: #3e3e3e;
+$pollPromptColor: #fe9e08;
+$pollGraphYesColor: #147bff;
+$pollGraphNoColor: #fe9e08;
 
-$pollWidth = 800px;
-$pollHeight = 300px;
+$pollWidth: 800px;
+$pollHeight: 300px;
 
 @mixin transition($transition-property, $transition-time, $method) {
     -webkit-transition: $transition-property $transition-time $method;
@@ -51,7 +51,8 @@ $pollHeight = 300px;
 
   -webkit-backface-visibility: hidden;
 
-  @animation(fadein, 1.5s);
+  @include animation(fadein, 1.5s);
+
 }
 
 .poll-prompt {
@@ -113,7 +114,7 @@ $pollHeight = 300px;
   top: 20%;
   left: 5%;
 
-  @animation(fadein, 1.5s);
+  @include animation(fadein, 1.5s);
 
   > ul {
     list-style: none;
@@ -145,7 +146,7 @@ $pollHeight = 300px;
     clear: both;
   }
   .graph {
-    @transition(width, 2s, ease-in-out);
+    @include transition(width, 2s, ease-in-out);
     width: 0px;
   }
 }
@@ -162,5 +163,15 @@ $pollHeight = 300px;
   }
   &[data-id="2"] .graph {
     background-color: $pollGraphNoColor;
+  }
+}
+
+@include keyframes(fadein) {
+  from: {
+    opacity: 0;
+  }
+
+  to: {
+    opacity: 1;
   }
 }

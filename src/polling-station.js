@@ -124,9 +124,9 @@
 
         this.changeEvent = new Event('poll-change');
         this.getElement().addEventListener('poll-change', function(e) {
+            that.unbindToEvents();
             that.swap("poll-answers", "poll-results");
             that.render(that.poll);
-            that.unbindToEvents();
             setTimeout(function() {
                 var graphs = that.getElement().querySelectorAll('#poll-results .graph');
                 if (graphs) {

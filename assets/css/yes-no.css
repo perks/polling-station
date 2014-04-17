@@ -1,170 +1,161 @@
- #polling-widget {
-     position: relative;
-     top: 50px;
-     border-bottom: 1px solid #c1c1c1;
-     color: #3e3e3e;
-     font-family:'Lato', sans-serif;
-     margin: 0 auto;
-     max-width: 800px;
-     height: 300px;
+/*!
+ * polling-station
+ * 
+ * 
+ * @author Chris Evans
+ * @version 0.0.1
+ * Copyright 2014. MIT licensed.
+ */
 
-     -webkit-backface-visibility:hidden;
-     -webkit-animation: fadein 1.5s;
-     -moz-animation: fadein 1.5s;
-     -ms-animation: fadein 1.5s;
-     -o-animation: fadein 1.5s;
-     animation: fadein 1.5s;
- }
- .poll-prompt {
-     font-size: 12px;
-     font-weight: 400;
-     letter-spacing: 2px;
-     color: #fe9e08;
-     margin-top: 30px;
-     text-align: center;
-     text-transform: uppercase;
-     display: table;
-     white-space: nowrap;
- }
- .poll-prompt:before, .poll-prompt:after {
-     border-top: 1px solid #c1c1c1;
-     content:'';
-     display: table-cell;
-     position: relative;
-     top: 0.5em;
-     width: 45%;
- }
- .poll-prompt:before {
-     right: 1.5%;
- }
- .poll-prompt:after {
-     left: 1.5%;
- }
- #poll-question {
-     position: relative;
-     top: 20px;
-     margin: 0 auto;
-     font-size: 20px;
-     text-align: center;
-     font-weight: 400;
- }
- #poll-answers {
-     position: relative;
-     padding-left: 0px;
-     margin: 0 auto;
-     top: 20px;
-     padding-right: 20px;
-     text-align: center;
- }
- .poll-answer {
-     display: inline-block;
-     text-align: center;
-     padding: 40px 20px 20px 20px;
+#polling-widget {
+  position: relative;
+  top: 50px;
+  border-bottom: 1px solid #c1c1c1;
+  color: #3e3e3e;
+  font-family: 'Lato', sans-serif;
+  margin: 0 auto;
+  max-width: 800px;
+  height: 300px;
+  -webkit-backface-visibility: hidden;
+  -webkit-animation: fadein 1.5s;
+  -webkit-animation: fadein 1.5s;
+  -moz-animation: fadein 1.5s;
+  -ms-animation: fadein 1.5s;
+  -o-animation: fadein 1.5s;
+  animation: fadein 1.5s;
+}
 
- }
- .poll-answer > .poll-answer-text {
-     display: block;
- }
- #poll-results {
-     display: none;
-     position: relative;
-     top: 20%;
-     left: 5%;
-     -webkit-animation: fadein 1.5s;
-     -moz-animation: fadein 1.5s;
-     -ms-animation: fadein 1.5s;
-     -o-animation: fadein 1.5s;
-     animation: fadein 1.5s;
- }
- #poll-results > ul {
-     list-style: none;
-     padding-left: 0px;
- }
- #poll-results .poll-result-text {
-     position: relative;
-     text-transform: uppercase;
-     letter-spacing: 3px;
-     font-size: 30px;
-     width: 15%;
-     text-align: center;
-     float: left;
-     font-weight: 300;
- }
- #poll-results .bar {
-     position: relative;
-     float: right;
-     width: 85%;
-     top: 10px;
- }
+.poll-prompt {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  color: #fe9e08;
+  margin-top: 30px;
+  text-align: center;
+  text-transform: uppercase;
+  display: table;
+  white-space: nowrap;
+}
+.poll-prompt:before, .poll-prompt:after {
+  border-top: 1px solid #c1c1c1;
+  content: '';
+  display: table-cell;
+  position: relative;
+  top: 0.5em;
+  width: 45%;
+}
+.poll-prompt:before {
+  right: 1.5%;
+}
+.poll-prompt:after {
+  left: 1.5%;
+}
 
- @media only screen and (min-width : 320px) and (max-width : 480px) {
+#poll-question {
+  position: relative;
+  top: 20px;
+  margin: 0 auto;
+  font-size: 20px;
+  text-align: center;
+  font-weight: 400;
+}
 
-     #poll-results .bar {
-          width: 80%;
-     }
- }
- #poll-results .graph {
-     height: 7px;
- }
- #poll-results .graph-caption {
-     font-size: 12px;
- }
- #poll-results li {
-     clear: both;
- }
- #poll-results .graph {
-     -webkit-transition: width 2s ease-in-out;
-     -moz-transition: width 2s ease-in-out;
-     -o-transition: width 2s ease-in-out;
-     transition: width 2s ease-in-out;
-     width: 0px;
- }
- .poll-result[data-id="1"] .graph {
-     background-color: #147bff;
- }
- .poll-result[data-id="2"] .graph {
-     background-color: #fe9e08;
- }
+#poll-answers {
+  position: relative;
+  padding-left: 0px;
+  margin: 0 auto;
+  top: 20px;
+  padding-right: 20px;
+  text-align: center;
+}
 
- @keyframes fadein {
-     from {
-         opacity: 0;
-     }
-     to {
-         opacity: 1;
-     }
- }
- @-moz-keyframes fadein {
-     from {
-         opacity: 0;
-     }
-     to {
-         opacity: 1;
-     }
- }
- @-webkit-keyframes fadein {
-     from {
-         opacity: 0;
-     }
-     to {
-         opacity: 1;
-     }
- }
- @-ms-keyframes fadein {
-     from {
-         opacity: 0;
-     }
-     to {
-         opacity: 1;
-     }
- }
- ​
- @-o-keyframes fadein {
-     from {
-         opacity: 0;
-     }
-     to {
-         opacity: 1;
-     }
- }
- ​
+.poll-answer {
+  display: inline-block;
+  text-align: center;
+  padding: 40px 20px 20px 20px;
+}
+.poll-answer > .poll-answer-text {
+  display: block;
+}
+
+#poll-results {
+  display: none;
+  position: relative;
+  top: 20%;
+  left: 5%;
+  -webkit-animation: fadein 1.5s;
+  -webkit-animation: fadein 1.5s;
+  -moz-animation: fadein 1.5s;
+  -ms-animation: fadein 1.5s;
+  -o-animation: fadein 1.5s;
+  animation: fadein 1.5s;
+}
+#poll-results > ul {
+  list-style: none;
+  padding-left: 0px;
+}
+#poll-results .poll-result-text {
+  position: relative;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 30px;
+  width: 15%;
+  text-align: center;
+  float: left;
+  font-weight: 300;
+}
+#poll-results .bar {
+  position: relative;
+  float: right;
+  width: 85%;
+  top: 10px;
+}
+#poll-results .graph {
+  height: 7px;
+}
+#poll-results .graph-caption {
+  font-size: 12px;
+}
+#poll-results li {
+  clear: both;
+}
+#poll-results .graph {
+  -webkit-transition: width 2s ease-in-out;
+  -moz-transition: width 2s ease-in-out;
+  -ms-transition: width 2s ease-in-out;
+  -o-transition: width 2s ease-in-out;
+  transition: width 2s ease-in-out;
+  width: 0px;
+}
+
+@media only screen and (min-width: 320px) and (max-width: 480px) {
+  #poll-results .bar {
+    width: 80%;
+  }
+}
+.poll-result[data-id="1"] .graph {
+  background-color: #147bff;
+}
+.poll-result[data-id="2"] .graph {
+  background-color: #fe9e08;
+}
+
+@-webkit-keyframes fadein {
+  from-opacity: 0;
+  to-opacity: 1;
+}
+
+@-moz-keyframes fadein {
+  from-opacity: 0;
+  to-opacity: 1;
+}
+
+@-o-keyframes fadein {
+  from-opacity: 0;
+  to-opacity: 1;
+}
+
+@keyframes fadein {
+  from-opacity: 0;
+  to-opacity: 1;
+}

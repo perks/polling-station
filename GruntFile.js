@@ -24,32 +24,20 @@ module.exports = function(grunt) {
             banner: '/*!\n' + ' * <%= pkg.name %>\n' + ' * <%= pkg.title %>\n' + ' * <%= pkg.url %>\n' + ' * @author <%= pkg.author %>\n' + ' * @version <%= pkg.version %>\n' + ' * Copyright <%= pkg.copyright %>. <%= pkg.license %> licensed.\n' + ' */\n'
         },
 
-        sass: {
-            dev: {
-                options: {
-                    style: 'expanded',
-                    banner: '<%= tag.banner %>',
-                    compass: true
-                },
-                files: {
-                    './assets/css/yes-no.css': './assets/scss/yes-no.scss'
-                }
-            },
+        compass: {
             dist: {
                 options: {
-                    style: 'compressed',
-                    compass: true
-                },
-                files: {
-                    './assets/css/yes-no.css': './assets/scss/yes-no.scss'
+                    sassDir: './assets/scss',
+                    cssDir: './assets/css',
+                    outputStyle: 'compressed',
                 }
             }
         },
 
         watch: {
-            sass: {
-                files: './assets/scss/{,*/}*.{scss, sass}',
-                tasks: ['sass:dev']
+            css: {
+              files: './assets/scss/*.scss',
+              tasks: ['compass']
             }
         },
 
@@ -71,9 +59,10 @@ module.exports = function(grunt) {
 
 
     grunt.registerTask('default', [
-      'sass:dev',
-      'watch']);
+        'watch'
+    ]);
 
     grunt.registerTask('build', [
-      'uglify']);
+        'uglify'
+    ]);
 };

@@ -37,14 +37,30 @@
     </script>
 
 
-    <script src="bower_components/handlebars/handlebars.js"></script>
-    <script src="vanilla-poll.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.3.0/handlebars.js"></script>
+    <script src="../polling-station.js"></script>
 
     <script type="text/javascript">
     //Example use//
+    var p = {
+        "id": 1,
+        "question": "I always wondered, have you ever answerd a question?",
+        "answers": [{
+            "id": 1,
+            "value": "Yes",
+            "count": 10,
+            "percent": 0
+        }, {
+            "id": 2,
+            "value": "No",
+            "count": 20,
+            "percent": 0
+        }],
+        "total": 0
+    }
     var myCustomTemplateFunc = Handlebars.compile(document.getElementById('poll-template').innerHTML);
     var myPoll = new PollingWidget({
-        url: "http://policymicapi.apiary-mock.com/v1",
+        poll: p,
         template: myCustomTemplateFunc
     });
 

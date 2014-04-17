@@ -62,7 +62,7 @@
             <div class="poll-bottom"></div> \
         </div>';
 
-    var hookNode = document.getElementById('polling-widget-script'),
+    var hookNode = document.getElementById('polling-station-script'),
         hookParent = hookNode.parentNode,
         head = document.head || document.getElementsByTagName('head')[0],
         hasOwn = Object.prototype.hasOwnProperty,
@@ -130,7 +130,7 @@
 
 
     var widget = document.createElement('div');
-    widget.id = 'vanilla-poll';
+    widget.id = 'polling-station';
     widget.innerHTML = default_template;
 
     hookNode.parentNode.insertBefore(widget, hookNode);
@@ -143,7 +143,7 @@
 
         if (css) loadCSS(css);
 
-        loadScript('./vanilla-poll.js', main.bind(null, url, localStorage));
+        loadScript('./polling-station.js', main.bind(null, url, localStorage));
     }
 
     function main(url, localStorage) {

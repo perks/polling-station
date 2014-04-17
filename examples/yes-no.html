@@ -46,15 +46,13 @@
         </div>
 
 
-
-    <script src="bower_components/handlebars/handlebars.js"></script>
-    <script src="vanilla-poll.js"></script>
+    <script src="../polling-station.js"></script>
 
     <script type="text/javascript">
     //Example use//
     var p = {
         "id": 1,
-        "question": "This Year Was Obama's Most Criticized, What Should be Barack's First Order of Business Be in 2014?",
+        "question": "I always wondered, have you ever answerd a question?",
         "answers": [{
             "id": 1,
             "value": "Yes",
@@ -69,10 +67,9 @@
         "total": 0
     }
 
-
     var myPoll = new PollingWidget({
         localStorage: true,
-        url:"http://policymicapi.apiary-mock.com/v1"
+        poll: p
     });
 
     myPoll.init();

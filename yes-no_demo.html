@@ -16,28 +16,28 @@
 
                 <div class="poll-answer" data-id="1">
                     <img/>
-                    <span class="text"></span>
+                    <span class="poll-answer-text"></span>
                 </div>
 
                 <div class="poll-answer" data-id="2">
                     <img src="" alt="">
-                    <span class="text"></span>
+                    <span class="poll-answer-text"></span>
                 </div>
             </div>
             <div id="poll-results">
                 <ul>
-                    <li>
-                        <div class="text"></div>
+                    <li class="poll-result" data-id="1">
+                        <div class="poll-result-text"></div>
                         <div class="bar">
-                            <div class="graph" data-id="1"></div>
-                            <div class="graph-caption" data-id="1"></div>
+                            <div class="graph"></div>
+                            <div class="poll-result-caption"></div>
                         </div>
                     </li>
-                    <li>
-                        <div class="text"></div>
+                    <li class="poll-result" data-id="2">
+                        <div class="poll-result-text"></div>
                          <div class="bar">
-                            <div class="graph" data-id="2"></div>
-                            <div class="graph-caption" data-id="2"></div>
+                            <div class="graph"></div>
+                            <div class="poll-result-caption"></div>
                         </div>
                     </li>
                 </ul>
@@ -52,7 +52,7 @@
     //Example use//
     var p = {
         "id": 1,
-        "question": "I always wondered, have you ever answerd a question?",
+        "question": "I always wondered, have you ever answered a question?",
         "answers": [{
             "id": 1,
             "value": "Yes",

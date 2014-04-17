@@ -66,7 +66,7 @@
      padding: 40px 20px 20px 20px;
 
  }
- .poll-answer > .text {
+ .poll-answer > .poll-answer-text {
      display: block;
  }
  #poll-results {
@@ -88,7 +88,7 @@
      list-style: none;
      padding-left: 0px;
  }
- #poll-results .text {
+ #poll-results .poll-result-text {
      position: relative;
      text-transform: uppercase;
      letter-spacing: 3px;
@@ -113,7 +113,6 @@
  }
  #poll-results .graph {
      height: 7px;
-     background-color: blue;
  }
  #poll-results .graph-caption {
      font-size: 12px;
@@ -128,10 +127,10 @@
      transition: width 2s ease-in-out;
      width: 0px;
  }
- #poll-results .graph[data-id="1"] {
+ .poll-result[data-id="1"] .graph {
      background-color: #147bff;
  }
- #poll-results .graph[data-id="2"] {
+ .poll-result[data-id="2"] .graph {
      background-color: #fe9e08;
  }
 

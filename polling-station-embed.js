@@ -29,32 +29,32 @@
 
 (function() {
     var default_template = '<div id="polling-widget" class="polling-widget"> \
-    <div class="poll-prompt">What do you think?</div> \
+            <div class="poll-prompt">What do you think?</div> \
             <div id="poll-question"></div> \
             <div id="poll-answers"> \
                 <div class="poll-answer" data-id="1"> \
                     <img/> \
-                    <span class="text"></span> \
+                    <span class="poll-answer-text"></span> \
                 </div> \
                 <div class="poll-answer" data-id="2"> \
                     <img src="" alt=""> \
-                    <span class="text"></span> \
+                    <span class="poll-answer-text"></span> \
                 </div> \
             </div> \
             <div id="poll-results"> \
                 <ul> \
-                    <li> \
-                        <div class="text"></div> \
+                    <li class="poll-result" data-id="1"> \
+                        <div class="poll-result-text"></div> \
                         <div class="bar"> \
-                            <div class="graph" data-id="1"></div> \
-                            <div class="graph-caption" data-id="1"></div> \
+                            <div class="graph"></div> \
+                            <div class="poll-result-caption"></div> \
                         </div> \
                     </li> \
-                    <li> \
-                        <div class="text"></div> \
+                    <li class="poll-result" data-id="2"> \
+                        <div class="poll-result-text"></div> \
                          <div class="bar"> \
-                            <div class="graph" data-id="2"></div> \
-                            <div class="graph-caption" data-id="2"></div> \
+                            <div class="graph"></div> \
+                            <div class="poll-result-caption"></div> \
                         </div> \
                     </li> \
                 </ul> \
@@ -140,10 +140,11 @@
         url = getOption('url') || '';
         localStorage = getOption('localStorage') || false;
         css = getOption('css') || '';
+        lib = getOption('lib') || './polling-station.js';
 
         if (css) loadCSS(css);
 
-        loadScript('./polling-station.js', main.bind(null, url, localStorage));
+        loadScript(lib, main.bind(null, url, localStorage));
     }
 
     function main(url, localStorage) {

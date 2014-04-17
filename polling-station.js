@@ -65,26 +65,44 @@
             var index;
             var el = that.getElement();
             var question = el.querySelector('#poll-question');
-            var answers = el.querySelectorAll('div.poll-answer');
-            var answerText = el.querySelectorAll('.poll-answer > .text');
-            var answerImage = el.querySelectorAll('.poll-answer > img');
+
+            var answers = el.querySelectorAll('.poll-answer');
             var results = el.querySelectorAll('.poll-result');
-            var resultsText = el.querySelectorAll('#poll-results .text');
-            var graphCaptions = el.querySelectorAll('#poll-results .graph-caption');
+
+            var answerText = el.querySelectorAll('.poll-answer > .poll-answer-text');
+            var answerImage = el.querySelectorAll('.poll-answer > img');
+
+            var resultsText = el.querySelectorAll('#poll-results .poll-result-text');
+            var resultsCaptions = el.querySelectorAll('#poll-results .poll-result-caption');
 
             if (question) question.innerHTML = poll_data.question;
 
-            if (answerText.length) {
-                for (index = 0; index < answerText.length; index++) {
-                    answerText[index].innerHTML = poll_data.answers[index].value;
-                    answerImage[index].src = "./assets/img/answer_" + answers[index].getAttribute('data-id') + ".png";
-                    resultsText[index].innerHTML = poll_data.answers[index].value;
+            if (answers.length) {
+                for (index = 0; index < answers.length; index++) {
+                    if (answerText.length) {
+                        answerText[index].innerHTML = poll_data.answers[index].value;
+
+                        if (answerImage.length) {
+                            answerImage[index].src = "./assets/img/answer_" + answers[index].getAttribute('data-id') + ".png";
+                        }
+                    } else {
+                        answers[index].innerHTML = poll_data.answers[index].value;
+                    }
                 }
+
             }
 
-            if (graphCaptions.length) {
-                for (index = 0; index < graphCaptions.length; index++) {
-                    graphCaptions[index].innerHTML = poll_data.answers[index].percent + "% (" + poll_data.answers[index].count + " votes)";
+            if (results.length) {
+                for (index = 0; index < results.length; index++) {
+                    if (resultsText.length) {
+                        resultsText[index].innerHTML = poll_data.answers[index].value;
+                    } else {
+                        results[index].innerHTML = poll_data.answers[index].value + "% (" + poll_data.answers[index].count + " votes)";
+                    }
+
+                    if (resultsCaptions.length) {
+                        resultsCaptions[index].innerHTML = poll_data.answers[index].percent + "% (" + poll_data.answers[index].count + " votes)";
+                    }
                 }
             }
 
@@ -106,9 +124,9 @@
 
         this.changeEvent = new Event('poll-change');
         this.getElement().addEventListener('poll-change', function(e) {
-            that.unbindToEvents();
             that.swap("poll-answers", "poll-results");
             that.render(that.poll);
+            that.unbindToEvents();
             setTimeout(function() {
                 var graphs = that.getElement().querySelectorAll('#poll-results .graph');
                 if (graphs) {
@@ -259,15 +277,14 @@
             var default_poll = {
                 "question": "Did I want a default data model?",
                 "answers": [{
-                        "value": "Yes",
-                        "count": 10,
-                        "percent": 0
-                    },
-                    {
-                        "value": "No",
-                        "count": 20,
-                        "percent": 0
-                    }],
+                    "value": "Yes",
+                    "count": 10,
+                    "percent": 0
+                }, {
+                    "value": "No",
+                    "count": 20,
+                    "percent": 0
+                }],
                 "total": 0
             };
             this.render(default_poll);

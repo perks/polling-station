@@ -10,22 +10,20 @@
 <body>
     <h1>Polling Widget test</h1>
 
-    <section id="polling-container">
+
         <div id="polling-widget" class="polling-widget">
             <h1 id="poll-question"></h1>
             <ul id="poll-answers">
-                <li class="poll-answer" data-id="0"></li>
                 <li class="poll-answer" data-id="1"></li>
+                <li class="poll-answer" data-id="2"></li>
             </ul>
             <div id="poll-results">
-                <div class="poll-result" data-id="0"></div>
                 <div class="poll-result" data-id="1"></div>
+                <div class="poll-result" data-id="2"></div>
             </div>
         </div>
-    </section>
 
 
-    <script src="bower_components/handlebars/handlebars.js"></script>
     <script src="../polling-station.js"></script>
 
     <script type="text/javascript">
@@ -33,7 +31,7 @@
     //
     var p = {
         "id": 1,
-        "question": "I always wondered, have you ever answerd a question?",
+        "question": "I always wondered, have you ever answered a question?",
         "answers": [{
             "id": 1,
             "value": "Yes",

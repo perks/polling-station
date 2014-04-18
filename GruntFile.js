@@ -6,6 +6,8 @@
 
 'use strict';
 
+var LIVERELOAD_PORT = 35279;
+
 /*
  * Grunt Module
  */
@@ -15,10 +17,6 @@ module.exports = function(grunt) {
      */
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-
-        project: {
-            css: ['']
-        },
 
         tag: {
             banner: '/*!\n' + ' * <%= pkg.name %>\n' + ' * <%= pkg.title %>\n' + ' * <%= pkg.url %>\n' + ' * @author <%= pkg.author %>\n' + ' * @version <%= pkg.version %>\n' + ' * Copyright <%= pkg.copyright %>. <%= pkg.license %> licensed.\n' + ' */\n'
@@ -35,19 +33,46 @@ module.exports = function(grunt) {
         },
 
         watch: {
+            options: {
+                livereload: LIVERELOAD_PORT
+            },
             css: {
-              files: './assets/scss/*.scss',
-              tasks: ['compass']
+                files: './assets/scss/*.scss',
+                tasks: ['compass']
+            },
+            js: {
+                files: 'src/*.js',
+                tasks: ['uglify']
+            }
+        },
+
+        connect: {
+            server: {
+                options: {
+                    livereload: LIVERELOAD_PORT,
+                    port: 8080
+                }
+            }
+        },
+
+        open: {
+            server: {
+                path: 'http://localhost:<%= connect.options.port %>'
             }
         },
 
         uglify: {
+
+            files: {
+                src: 'src/*.js',
+                dest: 'dist/',
+                expand: true,
+                flatten: true,
+                ext: '.min.js'
+            },
+
             options: {
                 banner: '<%= tag.banner %>'
-            },
-            build: {
-                src: 'src/<%= pkg.name %>.js',
-                dest: 'dist/<%= pkg.name %>.min.js'
             }
         }
     });
@@ -65,4 +90,13 @@ module.exports = function(grunt) {
     grunt.registerTask('build', [
         'uglify'
     ]);
+
+    grunt.registerTask('server', function(target) {
+
+        grunt.task.run([
+            'uglify',
+            'connect',
+            'watch'
+        ]);
+    });
 };

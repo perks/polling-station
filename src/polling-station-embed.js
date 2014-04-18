@@ -138,9 +138,10 @@
     function init() {
 
         url = getOption('url') || '';
+        base = getOption('base') || './';
         localStorage = getOption('localStorage') || false;
         css = getOption('css') || '';
-        lib = getOption('lib') || './polling-station.js';
+        lib = base + getOption('lib') || base + '/dist/polling-station-min.js';
 
         if (css) loadCSS(css);
 

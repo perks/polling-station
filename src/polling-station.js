@@ -269,7 +269,7 @@
 
             function onLoad(xhr) {
                 var loaded = JSON.parse(xhr.responseText);
-                loaded = loaded.response.poll;
+                // loaded = loaded.response.poll;
                 console.log(loaded);
                 that.render(loaded);
                 that.poll = loaded;;

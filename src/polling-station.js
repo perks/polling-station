@@ -241,7 +241,7 @@
             console.log(postUrl);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == 4) {
-                    if (xhr.status == 200)
+                    if ( 200 <= xhr.status && xhr.status < 300)
                         console.log('save successfull');
                     else {
                         console.log('error saving - defaulting to load from local storage');
@@ -269,6 +269,8 @@
 
             function onLoad(xhr) {
                 var loaded = JSON.parse(xhr.responseText);
+                loaded = loaded.response.poll;
+                console.log(loaded);
                 that.render(loaded);
                 that.poll = loaded;;
                 callback();
@@ -303,9 +305,10 @@
 
     PollingWidget.prototype.updateSelection = function(id) {
         if (!cookieLib.hasItem('poll-vote')) {
+            console.log('im saving');
             this.lookup(id).count++;
             this.recalibrate();
-            this.save(this.id, this.poll);
+            this.save(this.lookup(id).id, this.poll);
         } else {
             console.log('already voted');
         }

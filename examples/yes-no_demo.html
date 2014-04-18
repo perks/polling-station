@@ -68,10 +68,11 @@
     }
 
     var myPoll = new PollingWidget({
-        localStorage: true,
-        poll: p
+        url: "http://api.policymic.com/v1",
+        id: 5
     });
 
+    console.log('initing poll');
     myPoll.init();
     </script>
 

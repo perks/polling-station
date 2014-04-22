@@ -58,6 +58,12 @@
 
 (function() {
     function PollingWidget(context) {
+        var context = context || {
+            id: 1,
+            el: '#polling-widget',
+            poll: null
+        };
+
         var that = this;
 
         var default_template_func = function(poll_data) {
@@ -122,7 +128,8 @@
         this.id = this.options.id;
 
 
-        this.changeEvent = new Event('poll-change');
+        this.changeEvent = document.createEvent('Event');
+        this.changeEvent.initEvent('poll-change', true, true);
         this.getElement().addEventListener('poll-change', function(e) {
             that.unbindToEvents();
             that.loadPoll(that.id);
@@ -241,7 +248,7 @@
             console.log(postUrl);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == 4) {
-                    if ( 200 <= xhr.status && xhr.status < 300)
+                    if (200 <= xhr.status && xhr.status < 300)
                         console.log('save successfull');
                     else {
                         console.log('error saving - defaulting to load from local storage');

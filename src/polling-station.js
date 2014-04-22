@@ -38,23 +38,8 @@
     }
     window.cookieLib = cookieLib;
 
-    WebFontConfig = {
-        google: {
-            families: ['Lato:100,300,400,700:latin']
-        }
-    };
-
 })();
 
-(function() {
-    var wf = document.createElement('script');
-    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
-        '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
-    wf.type = 'text/javascript';
-    wf.async = 'true';
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(wf, s);
-})();
 
 (function() {
     function PollingWidget(context) {
@@ -121,7 +106,8 @@
             url: context.url || '',
             template: context.template || default_template_func,
             localStorage: context.localStorage || false,
-            poll: context.poll || null
+            poll: context.poll || null,
+            dev: context.dev || false
         };
 
         this.poll = context.poll;
@@ -193,7 +179,12 @@
         };
 
         this.init = function() {
-            if (!that.poll) {
+            if(that.options.dev) {
+                console.log('cookie removed')
+                cookieLib.removeItem('poll-vote');
+            }
+
+            if (!that.poll || (that.poll && that.options.localStorage)) {
                 that.loadPoll(that.id, that.bindToEvents);
             } else {
                 that.render(that.poll);

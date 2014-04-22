@@ -46,7 +46,7 @@
         </div>
 
 
-    <script src="../dist/polling-station.min.js"></script>
+    <script src="../src/polling-station.js"></script>
 
     <script type="text/javascript">
     //Example use//
@@ -57,19 +57,20 @@
             "id": 1,
             "value": "Yes",
             "count": 10,
-            "percent": 0
+            "percent": 33
         }, {
             "id": 2,
             "value": "No",
             "count": 20,
-            "percent": 0
+            "percent": 66
         }],
         "total": 0
     }
 
     var myPoll = new PollingWidget({
-        url: "http://policymicapi.apiary-mock.com/v1",
-        id: 1
+        poll: p,
+        dev: true,
+        localStorage: true
     });
 
     console.log('initing poll');

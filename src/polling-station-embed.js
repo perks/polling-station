@@ -142,10 +142,7 @@
         var localStorage = getOption('localStorage') || false;
         var css = getOption('css') || '';
         var lib = base + getOption('lib') || base + '/dist/polling-station-min.js';
-        var poll_id = getOption('poll-id') || 1;
-
-        console.log(poll_id);
-
+        var poll_id = parseInt(getOption('poll-id'), 10) || 1;
 
         if (css) loadCSS(css);
 

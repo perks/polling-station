@@ -111,7 +111,7 @@
         };
 
         this.poll = context.poll;
-        this.id = this.options.id;
+        this.id = parseInt(this.options.id, 10);
 
 
         this.changeEvent = document.createEvent('Event');
@@ -179,7 +179,7 @@
         };
 
         this.init = function() {
-            if(that.options.dev) {
+            if (that.options.dev) {
                 console.log('cookie removed')
                 cookieLib.removeItem('poll-vote');
             }
@@ -217,16 +217,16 @@
         xhr.send(null);
     }
 
-    PollingWidget.prototype.save = function(answer_id, poll_data) {
+    PollingWidget.prototype.save = function(poll_data, answer_id) {
         cookieLib.setItem('poll-vote', this.id);
         var that = this;
-        var vote_id = answer_id || this.id;
+        var vote_id = answer_id || 1;
         var saved_poll = poll_data || this.poll;
         this.poll = saved_poll;
-        this.id = vote_id;
         if (this.options.localStorage) {
-            localStorage.removeItem('poll' + vote_id);
-            localStorage.setItem('poll' + vote_id, JSON.stringify(saved_poll));
+            console.log('made it to local save');
+            localStorage.removeItem('poll' + that.id);
+            localStorage.setItem('poll' + that.id, JSON.stringify(saved_poll));
         }
         if (this.options.url) {
             var xhr = new XMLHttpRequest();
@@ -251,7 +251,16 @@
     PollingWidget.prototype.loadPoll = function(id, callback) {
         var callback = callback || function() {};
         if (!this.options.url && this.options.localStorage) {
-            var loaded = JSON.parse(localStorage.getItem('poll' + id));
+            var loaded;
+            if(localStorage.getItem('poll'+ id)) {
+                loaded = JSON.parse(localStorage.getItem('poll' + id));
+            }
+            else {
+                loaded = this.poll
+            }
+
+
+            console.log(loaded);
             this.render(loaded);
             this.poll = loaded;
             callback();
@@ -290,7 +299,7 @@
     };
 
     PollingWidget.prototype.render = function(poll_data) {
-        if (cookieLib.hasItem('poll-vote')) {
+        if (cookieLib.hasItem('poll-vote') && parseInt(cookieLib.getItem('poll-vote'), 10) === this.id) {
             this.getElement().dispatchEvent(this.changeEvent);
         }
         var html = this.options.template(poll_data);
@@ -298,14 +307,13 @@
     }
 
     PollingWidget.prototype.updateSelection = function(id) {
-        if (!cookieLib.hasItem('poll-vote')) {
+        if (cookieLib.hasItem('poll-vote') && parseInt(cookieLib.getItem('poll-vote'), 10) === this.id) {
+            console.log('already voted');
+        } else {
             this.lookup(id).count++;
             this.recalibrate();
-            this.save(this.lookup(id).id, this.poll);
-        } else {
-            console.log('already voted');
+            this.save(this.poll, this.lookup(id).id);
         }
-
     }
 
     PollingWidget.prototype.recalibrate = function() {

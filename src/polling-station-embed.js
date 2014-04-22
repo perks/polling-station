@@ -137,25 +137,30 @@
 
     function init() {
 
-        url = getOption('url') || '';
-        base = getOption('base') || './';
-        localStorage = getOption('localStorage') || false;
-        css = getOption('css') || '';
-        lib = base + getOption('lib') || base + '/dist/polling-station-min.js';
+        var url = getOption('url') || '';
+        var base = getOption('base') || './';
+        var localStorage = getOption('localStorage') || false;
+        var css = getOption('css') || '';
+        var lib = base + getOption('lib') || base + '/dist/polling-station-min.js';
+        var poll_id = getOption('poll-id') || 1;
+
+        console.log(poll_id);
+
 
         if (css) loadCSS(css);
 
-        loadScript(lib, main.bind(null, url, localStorage));
+        loadScript(lib, main.bind(null, url, localStorage, poll_id));
     }
 
-    function main(url, localStorage) {
+    function main(url, localStorage, poll_id) {
 
         domready(function() {
 
 
             var myPoll = new PollingWidget({
                 localStorage: localStorage,
-                url: url
+                url: url,
+                id: poll_id
             });
 
             myPoll.init();

@@ -59,7 +59,7 @@
 (function() {
     function PollingWidget(context) {
         var context = context || {
-            id: 1,
+            id: 5,
             el: '#polling-widget',
             poll: null
         };
@@ -132,7 +132,6 @@
         this.changeEvent.initEvent('poll-change', true, true);
         this.getElement().addEventListener('poll-change', function(e) {
             that.unbindToEvents();
-            that.loadPoll(that.id);
             that.swap("poll-answers", "poll-results");
             setTimeout(function() {
                 var graphs = that.getElement().querySelectorAll('#poll-results .graph');
@@ -194,10 +193,6 @@
         };
 
         this.init = function() {
-            if (cookieLib.hasItem('poll-vote')) {
-                cookieLib.removeItem('poll-vote'); //for dev
-                console.log('remove cookie;');
-            }
             if (!that.poll) {
                 that.loadPoll(that.id, that.bindToEvents);
             } else {
@@ -245,7 +240,6 @@
         if (this.options.url) {
             var xhr = new XMLHttpRequest();
             var postUrl = this.options.url + '/polls/' + that.id + '/vote/' + vote_id;
-            console.log(postUrl);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == 4) {
                     if (200 <= xhr.status && xhr.status < 300)
@@ -276,8 +270,7 @@
 
             function onLoad(xhr) {
                 var loaded = JSON.parse(xhr.responseText);
-                // loaded = loaded.response.poll;
-                console.log(loaded);
+                loaded = loaded.response.poll;
                 that.render(loaded);
                 that.poll = loaded;;
                 callback();
@@ -306,13 +299,15 @@
     };
 
     PollingWidget.prototype.render = function(poll_data) {
+        if (cookieLib.hasItem('poll-vote')) {
+            this.getElement().dispatchEvent(this.changeEvent);
+        }
         var html = this.options.template(poll_data);
         this.getElement().innerHTML = html;
     }
 
     PollingWidget.prototype.updateSelection = function(id) {
         if (!cookieLib.hasItem('poll-vote')) {
-            console.log('im saving');
             this.lookup(id).count++;
             this.recalibrate();
             this.save(this.lookup(id).id, this.poll);

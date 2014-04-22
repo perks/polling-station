@@ -1,0 +1,31 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+        <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+</head>
+
+<body>
+    <script src="../node_modules/mocha/mocha.js"></script>
+    <script src="../node_modules/chai/chai.js"></script>
+    <div id="mocha"></div>
+
+    <script>
+    mocha.setup('bdd');
+    mocha.reporter('html');
+    expect = chai.expect;
+    </script>
+
+    <script src="../src/polling-station.js"></script>
+    <script src="./mycode.js"></script>
+
+    <script>
+    if (window.mochaPhantomJS) {
+        mochaPhantomJS.run();
+    } else {
+        mocha.run();
+    }
+    </script>
+</body>
+
+</html>

@@ -74,6 +74,15 @@ module.exports = function(grunt) {
             options: {
                 banner: '<%= tag.banner %>'
             }
+        },
+
+        mocha: {
+            all: {
+                src: ['tests/testrunner.html'],
+            },
+            options: {
+                run: true
+            }
         }
     });
 
@@ -89,6 +98,10 @@ module.exports = function(grunt) {
 
     grunt.registerTask('build', [
         'uglify'
+    ]);
+
+    grunt.registerTask('test', [
+        'mocha'
     ]);
 
     grunt.registerTask('server', function(target) {

@@ -140,16 +140,16 @@
         var url = getOption('url') || '';
         var base = getOption('base') || './';
         var localStorage = getOption('localStorage') || false;
-        var css = getOption('css') || '';
-        var lib = base + getOption('lib') || base + '/dist/polling-station-min.js';
+        var css = base + getOption('css') || base + 'assets/css/default.css';
+        var lib = base + getOption('lib') || base + 'dist/polling-station-min.js';
         var poll_id = parseInt(getOption('poll-id'), 10) || 1;
 
         if (css) loadCSS(css);
 
-        loadScript(lib, main.bind(null, url, localStorage, poll_id));
+        loadScript(lib, main.bind(null, url, localStorage, poll_id, base));
     }
 
-    function main(url, localStorage, poll_id) {
+    function main(url, localStorage, poll_id, base) {
 
         domready(function() {
 
@@ -157,7 +157,8 @@
             var myPoll = new PollingWidget({
                 localStorage: localStorage,
                 url: url,
-                id: poll_id
+                id: poll_id,
+                base: base
             });
 
             myPoll.init();

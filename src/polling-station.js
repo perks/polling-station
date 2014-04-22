@@ -46,7 +46,7 @@
         var context = context || {
             id: 5,
             el: '#polling-widget',
-            poll: null
+            poll: null,
         };
 
         var that = this;
@@ -74,7 +74,7 @@
                         answerText[index].innerHTML = poll_data.answers[index].value;
 
                         if (answerImage.length) {
-                            answerImage[index].src = "../assets/img/answer_" + answers[index].getAttribute('data-id') + ".png";
+                            answerImage[index].src =  that.options.base + "assets/img/answer_" + answers[index].getAttribute('data-id') + ".png";
                         }
                     } else {
                         answers[index].innerHTML = poll_data.answers[index].value;
@@ -107,7 +107,8 @@
             template: context.template || default_template_func,
             localStorage: context.localStorage || false,
             poll: context.poll || null,
-            dev: context.dev || false
+            dev: context.dev || false,
+            base: context.base || './'
         };
 
         this.poll = context.poll;
@@ -310,6 +311,7 @@
         if (cookieLib.hasItem('poll-vote') && parseInt(cookieLib.getItem('poll-vote'), 10) === this.id) {
             console.log('already voted');
         } else {
+            debugger;
             this.lookup(id).count++;
             this.recalibrate();
             this.save(this.poll, this.lookup(id).id);

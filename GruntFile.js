@@ -81,7 +81,8 @@ module.exports = function(grunt) {
                 src: ['tests/testrunner.html'],
             },
             options: {
-                run: true
+                run: true,
+                reporter: 'Nyan'
             }
         }
     });
@@ -98,10 +99,6 @@ module.exports = function(grunt) {
 
     grunt.registerTask('build', [
         'uglify'
-    ]);
-
-    grunt.registerTask('test', [
-        'mocha'
     ]);
 
     grunt.registerTask('server', function(target) {

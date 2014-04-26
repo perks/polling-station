@@ -1,10 +1,13 @@
+# Work in Progress
+Program code may be out of sync with documentation
+
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 # Table of Contents
 *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [vanilla-poll.js](#vanilla-polljs)
+- [polling-station.js](#polling-station.js)
 	- [Description](#description)
 	- [Version](#version)
 	- [Installation](#installation)
@@ -21,7 +24,7 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-vanilla-poll.js
+polling-station.js
 =====
 
 ##Description
@@ -87,7 +90,7 @@ Here is an example using a Handlebars template:
 ```javascript
 var myCustomTemplateFunc = Handlebars.compile(document.getElementById('poll-template').innerHTML);
 var myPoll = new PollingWidget({
-    url: "data.json",
+    url: "http://myapirooturl.com/api",
     template: myCustomTemplateFunc
 });
 
@@ -103,7 +106,7 @@ The polling widget object is created with a *context* argument that provides ins
 ```javascript
     var myPollingWidget = new PollingWidget({
         el: '#idOfWidgetDiv', // this defaults to #polling-widget
-        url: 'api/endpoint', // this defaults to ''
+        url: 'http://myapirooturl.com/api', // this defaults to ''
     });
 ```
 
@@ -111,18 +114,21 @@ You can also pass in a local poll-data object as well through the `poll` paramet
 
 ```javascript
 var local_poll_data = {
-    "question": "Is this a model loaded from a url endpoint?",
-    "answers": [{
-        "value": "Yes",
-        "count": 10,
-        "percent": 0
+        "id": 1,
+        "question": "Is this poll loaded remotely?",
+        "answers": [{
+            "id": 1,
+            "value": "Yes",
+            "count": 10,
+            "percent": 33
         }, {
-        "value": "No",
-        "count": 20,
-        "percent": 0
+            "id": 2,
+            "value": "No",
+            "count": 20,
+            "percent": 66
         }],
-    "total": 0
-}
+        "total": 0
+    }
 
 var myPollingWidget = new PollingWidget({
     poll: local_poll_data,
@@ -143,6 +149,8 @@ Which will render the poll into the DOM and set up the event binding
 *   Context argument description
 *   Various behaviours
 *   Source documentation + function descriptions
+*   Describe embed script
+*   Build tools w/ Grunt
 
 
 

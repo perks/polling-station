@@ -185,7 +185,7 @@
                 cookieLib.removeItem('poll-vote');
             }
 
-            if (!that.poll || (that.poll && that.options.localStorage)) {
+            if (!that.poll || (that.poll && (that.options.localStorage || that.options.url))) {
                 that.loadPoll(that.id, that.bindToEvents);
             } else {
                 that.render(that.poll);
@@ -260,8 +260,6 @@
                 loaded = this.poll
             }
 
-
-            console.log(loaded);
             this.render(loaded);
             this.poll = loaded;
             callback();
@@ -273,7 +271,8 @@
                 var loaded = JSON.parse(xhr.responseText);
                 loaded = loaded.response.poll;
                 that.render(loaded);
-                that.poll = loaded;;
+                that.poll = loaded;
+                that.id = loaded.id;
                 callback();
             }
             this.fetchPoll(this.options.url, id, onLoad);

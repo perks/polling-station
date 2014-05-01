@@ -1,0 +1,27 @@
+      <div id="polling-widget" class="polling-widget">
+            <div class="poll-prompt">What do you think?</div>
+            <div id="poll-question"></div>
+            <div id="poll-answers">
+                <% for (var i = 0; i < answers.length; i++) { %>
+                  <div class="poll-answer" data-id="<%=answers[i].id%>">
+                    <img/>
+                    <span class="poll-answer-text"></span>
+                  </div>
+                <% } %>
+            </div>
+            <div id="poll-results">
+                <ul>
+                   <% for (var j = 0; i < answers.length; i++) { %>
+                    <li class="poll-result" data-id="<%=answer[j].id%>">
+                      <div class="poll-result-text"></div>
+                      <div class="bar">
+                        <div class="graph"></div>
+                        <div class="poll-result-caption"></div>
+                      </div>
+                    </li>
+                    <% } %>
+                </ul>
+            </div>
+            <div class="poll-bottom"></div>
+        </div>
+

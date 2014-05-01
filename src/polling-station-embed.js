@@ -1,171 +1,197 @@
 /*!
-  * domready (c) Dustin Diaz 2014 - License MIT
-  */
-!function (name, definition) {
+ * domready (c) Dustin Diaz 2014 - License MIT
+ */
+! function(name, definition) {
 
-  if (typeof module != 'undefined') module.exports = definition()
-  else if (typeof define == 'function' && typeof define.amd == 'object') define(definition)
-  else this[name] = definition()
+    if (typeof module != 'undefined') module.exports = definition()
+    else if (typeof define == 'function' && typeof define.amd == 'object') define(definition)
+    else this[name] = definition()
 
-}('domready', function () {
+}('domready', function() {
 
-  var fns = [], listener
-    , doc = document
-    , domContentLoaded = 'DOMContentLoaded'
-    , loaded = /^loaded|^i|^c/.test(doc.readyState)
+    var fns = [],
+        listener, doc = document,
+        domContentLoaded = 'DOMContentLoaded',
+        loaded = /^loaded|^i|^c/.test(doc.readyState)
 
-  if (!loaded)
-  doc.addEventListener(domContentLoaded, listener = function () {
-    doc.removeEventListener(domContentLoaded, listener)
-    loaded = 1
-    while (listener = fns.shift()) listener()
-  })
+        if (!loaded)
+            doc.addEventListener(domContentLoaded, listener = function() {
+                doc.removeEventListener(domContentLoaded, listener)
+                loaded = 1
+                while (listener = fns.shift()) listener()
+            })
 
-  return function (fn) {
-    loaded ? fn() : fns.push(fn)
-  }
+        return function(fn) {
+            loaded ? fn() : fns.push(fn)
+        }
 
 });
 
+
+// Simple JavaScript Templating
+// John Resig - http://ejohn.org/ - MIT Licensed
 (function() {
-    var default_template = '<div id="polling-widget" class="polling-widget"> \
-            <div class="poll-prompt">What do you think?</div> \
-            <div id="poll-question"></div> \
-            <div id="poll-answers"> \
-                <div class="poll-answer" data-id="1"> \
-                    <img/> \
-                    <span class="poll-answer-text"></span> \
-                </div> \
-                <div class="poll-answer" data-id="2"> \
-                    <img src="" alt=""> \
-                    <span class="poll-answer-text"></span> \
-                </div> \
-            </div> \
-            <div id="poll-results"> \
-                <ul> \
-                    <li class="poll-result" data-id="1"> \
-                        <div class="poll-result-text"></div> \
-                        <div class="bar"> \
-                            <div class="graph"></div> \
-                            <div class="poll-result-caption"></div> \
-                        </div> \
-                    </li> \
-                    <li class="poll-result" data-id="2"> \
-                        <div class="poll-result-text"></div> \
-                         <div class="bar"> \
-                            <div class="graph"></div> \
-                            <div class="poll-result-caption"></div> \
-                        </div> \
-                    </li> \
-                </ul> \
-            </div> \
-            <div class="poll-bottom"></div> \
-        </div>';
+    var cache = {};
 
-    var hookNode = document.getElementById('polling-station-script'),
-        hookParent = hookNode.parentNode,
-        head = document.head || document.getElementsByTagName('head')[0],
-        hasOwn = Object.prototype.hasOwnProperty,
-        url,
-        localStorage,
-        css;
+    this.tmpl = function tmpl(str, data) {
+        // Figure out if we're getting a template, or if we need to
+        // load the template - and be sure to cache the result.
+        var fn = !/\W/.test(str) ?
+            cache[str] = cache[str] ||
+            tmpl(document.getElementById(str).innerHTML) :
+
+        // Generate a reusable function that will serve as a template
+        // generator (and which will be cached).
+        new Function("obj",
+            "var p=[],print=function(){p.push.apply(p,arguments);};" +
+
+            // Introduce the data as local variables using with(){}
+            "with(obj){p.push('" +
+
+            // Convert the template into pure JavaScript
+            str
+            .replace(/[\r\t\n]/g, " ")
+            .split("<%").join("\t")
+            .replace(/((^|%>)[^\t]*)'/g, "$1\r")
+            .replace(/\t=(.*?)%>/g, "',$1,'")
+            .split("\t").join("');")
+            .split("%>").join("p.push('")
+            .split("\r").join("\\'") + "');}return p.join('');");
+
+        // Provide some basic currying to the user
+        return data ? fn(data) : fn;
+    };
+})();
 
 
-    function trim(str) {
-        return str.replace(/^\s+/, '').replace(/\s+$/, '');
-    }
 
-    function camelize(s) {
-        return s.replace(/-(.)/g, function(m, m1) {
-            return m1.toUpperCase();
-        });
-    }
+(function() {
 
-    function template(text, data) {
-        var i;
-        for (i in data) {
-            if (hasOwn.call(data, i)) {
-                text = text.replace(RegExp('{{#' + i + '}}', 'g'), data[i]);
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '../assets/templates/yes-no.tmpl', true);
+
+    xhr.onload = function() {
+        var that = this;
+        if (xhr.status >= 200 && xhr.status < 400) {
+            // Success loading
+            var tmplData = xhr.responseText;
+            start(tmplData);
+        } else {
+            console.log("Server reached, error loading template though");
+        }
+    };
+
+    xhr.onerror = function() {
+        console.log("Error fetching template");
+    };
+
+    xhr.send();
+
+
+    function start(tmplData) {
+        var hookNode = document.getElementById('polling-station-script'),
+            hookParent = hookNode.parentNode,
+            head = document.head || document.getElementsByTagName('head')[0],
+            hasOwn = Object.prototype.hasOwnProperty,
+            url,
+            localStorage,
+            css;
+
+        function camelize(s) {
+            return s.replace(/-(.)/g, function(m, m1) {
+                return m1.toUpperCase();
+            });
+        }
+
+        function getOption(opt) {
+            var value;
+            if (hookNode.dataset) {
+                value = hookNode.dataset[camelize(opt)];
+            } else {
+                value = hookNode.getAttribute('data-' + opt);
             }
-        }
-        return text;
-    }
 
-    function getOption(opt) {
-        var value;
-        if (hookNode.dataset) {
-            value = hookNode.dataset[camelize(opt)];
-        } else {
-            value = hookNode.getAttribute('data-' + opt);
-        }
+            return value;
+        };
 
-        return value;
-    }
+        function loadCSS(href) {
+            var link_tag = document.createElement('link');
+            link_tag.setAttribute("type", "text/css");
+            link_tag.setAttribute("rel", "stylesheet");
+            link_tag.setAttribute("href", href);
+            (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(link_tag);
+        };
 
-    function loadCSS(href) {
-        var link_tag = document.createElement('link');
-        link_tag.setAttribute("type", "text/css");
-        link_tag.setAttribute("rel", "stylesheet");
-        link_tag.setAttribute("href", href);
-        (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(link_tag);
-    }
+        function loadScript(src, onLoad) {
+            var script_tag = document.createElement('script');
+            script_tag.setAttribute("type", "text/javascript");
+            script_tag.setAttribute("src", src);
 
-    function loadScript(src, onLoad) {
-        var script_tag = document.createElement('script');
-        script_tag.setAttribute("type", "text/javascript");
-        script_tag.setAttribute("src", src);
+            if (script_tag.readyState) {
+                script_tag.onreadystatechange = function() {
+                    console.log('x')
+                    if (this.readyState == 'complete' || this.readyState == 'loaded') {
+                        onLoad();
+                    }
+                };
+            } else {
+                script_tag.onload = onLoad;
+            }
+            (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
+        };
 
-        if (script_tag.readyState) {
-            script_tag.onreadystatechange = function() {
-                console.log('x')
-                if (this.readyState == 'complete' || this.readyState == 'loaded') {
-                    onLoad();
-                }
-            };
-        } else {
-            script_tag.onload = onLoad;
-        }
-        (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
-    }
+        function init() {
 
+            var url = getOption('url') || '';
+            var base = getOption('base') || './';
+            var localStorage = getOption('localStorage') || false;
+            var css = base + getOption('css') || base + 'assets/css/default.css';
+            var lib = base + getOption('lib') || base + 'dist/polling-station-min.js';
+            var poll_id = parseInt(getOption('poll-id'), 10) || 1;
 
-    var widget = document.createElement('div');
-    widget.id = 'polling-station';
-    widget.innerHTML = default_template;
+            if (css) loadCSS(css);
 
-    hookNode.parentNode.insertBefore(widget, hookNode);
+            loadScript(lib, main.bind(null, url, localStorage, poll_id, base));
+        };
 
-    function init() {
+        function main(url, localStorage, poll_id, base) {
 
-        var url = getOption('url') || '';
-        var base = getOption('base') || './';
-        var localStorage = getOption('localStorage') || false;
-        var css = base + getOption('css') || base + 'assets/css/default.css';
-        var lib = base + getOption('lib') || base + 'dist/polling-station-min.js';
-        var poll_id = parseInt(getOption('poll-id'), 10) || 1;
+            domready(function() {
 
-        if (css) loadCSS(css);
+                var myPoll = new PollingWidget({
+                    localStorage: localStorage,
+                    url: url,
+                    id: poll_id,
+                    base: base
+                });
 
-        loadScript(lib, main.bind(null, url, localStorage, poll_id, base));
-    }
+                var render_tmpl = tmpl("yesno_tmpl");
 
-    function main(url, localStorage, poll_id, base) {
-
-        domready(function() {
+                var pollDom = document.getElementById('polling-station');
 
 
-            var myPoll = new PollingWidget({
-                localStorage: localStorage,
-                url: url,
-                id: poll_id,
-                base: base
+                var embed_scaffold = function(tmplFunction, elString) {
+                    document.getElementById(elString).innerHTML = tmplFunction(this.poll);
+                };
+
+                myPoll.init([embed_scaffold.bind(myPoll, render_tmpl, "polling-station")]);
+
             });
 
-            myPoll.init();
+        };
 
-        });
+        var tmplScript = document.createElement('script');
+        tmplScript.type = 'text/html';
+        tmplScript.id = 'yesno_tmpl';
+        tmplScript.innerHTML = tmplData;
+        document.body.appendChild(tmplScript);
+
+        var widget = document.createElement('div');
+        widget.id = 'polling-station';
+
+        hookNode.parentNode.insertBefore(widget, hookNode);
+
+        init();
 
     }
-
-    init();
 })();

@@ -74,7 +74,7 @@
                         answerText[index].innerHTML = poll_data.answers[index].value;
 
                         if (answerImage.length) {
-                            answerImage[index].src =  that.options.base + "assets/img/answer_" + answers[index].getAttribute('data-id') + ".png";
+                            answerImage[index].src = that.options.base + "assets/img/" + poll_data.answers[index].value + ".png";
                         }
                     } else {
                         answers[index].innerHTML = poll_data.answers[index].value;
@@ -98,7 +98,7 @@
             }
 
             return el.innerHTML;
-        }
+        };
 
         this.options = {
             id: context.id || 1,
@@ -115,25 +115,21 @@
         this.id = parseInt(this.options.id, 10);
 
 
-        this.changeEvent = document.createEvent('Event');
-        this.changeEvent.initEvent('poll-change', true, true);
-        this.getElement().addEventListener('poll-change', function(e) {
-            that.unbindToEvents();
-            that.swap("poll-answers", "poll-results");
-            setTimeout(function() {
-                var graphs = that.getElement().querySelectorAll('#poll-results .graph');
-                if (graphs) {
-                    for (var i = 0; i < graphs.length; i++) {
-                        graphs[i].style.width = that.poll.answers[i].percent + "%";
-                    }
-                }
-            }, 300);
-
-
-        });
-
-
         this.bindToEvents = function() {
+            that.changeEvent = document.createEvent('Event');
+            that.changeEvent.initEvent('poll-change', true, true);
+            that.getElement().addEventListener('poll-change', function(e) {
+                that.unbindToEvents();
+                that.swap("poll-answers", "poll-results");
+                setTimeout(function() {
+                    var graphs = that.getElement().querySelectorAll('#poll-results .graph');
+                    if (graphs) {
+                        for (var i = 0; i < graphs.length; i++) {
+                            graphs[i].style.width = that.poll.answers[i].percent + "%";
+                        }
+                    }
+                }, 300);
+            });
             var answers = that.getElement().querySelectorAll('.poll-answer');
             var answerImages = that.getElement().querySelectorAll('.poll-answer > img');
 
@@ -163,7 +159,6 @@
 
         };
 
-
         this.unbindToEvents = function() {
 
             var answerImages = that.getElement().querySelectorAll('.poll-answer > img');
@@ -179,16 +174,20 @@
 
         };
 
-        this.init = function() {
+        this.init = function(custom_callback_array) {
+            var custom_callback_array = custom_callback_array || [];
             if (that.options.dev) {
                 console.log('cookie removed')
                 cookieLib.removeItem('poll-vote');
             }
 
             if (!that.poll || (that.poll && (that.options.localStorage || that.options.url))) {
-                that.loadPoll(that.id, that.bindToEvents);
+                that.loadPoll(that.id, custom_callback_array.concat([that.bindToEvents]));
             } else {
                 that.render(that.poll);
+                custom_callback_array.forEach(function(callback) {
+                    callback();
+                });
                 that.bindToEvents();
             }
         };
@@ -196,8 +195,9 @@
         this.swap = function(swp1, swp2) {
             document.getElementById(swp1).style.display = 'none';
             document.getElementById(swp2).style.display = 'block';
-        }
-    }
+        };
+
+    };
 
 
     PollingWidget.prototype.getElement = function() {
@@ -249,20 +249,22 @@
         }
     }
 
-    PollingWidget.prototype.loadPoll = function(id, callback) {
-        var callback = callback || function() {};
+    PollingWidget.prototype.loadPoll = function(id, callbacks) {
+        var callbacks = callbacks || [];
+        console.log(callbacks);
         if (!this.options.url && this.options.localStorage) {
             var loaded;
-            if(localStorage.getItem('poll'+ id)) {
+            var that = this;
+            if (localStorage.getItem('poll' + id)) {
                 loaded = JSON.parse(localStorage.getItem('poll' + id));
-            }
-            else {
+            } else {
                 loaded = this.poll
             }
-
-            this.render(loaded);
             this.poll = loaded;
-            callback();
+            callbacks.forEach(function(callback) {
+                callback.call(that);
+            });
+            this.render(loaded);
 
         } else if (this.options.url) {
             var that = this;
@@ -270,10 +272,12 @@
             function onLoad(xhr) {
                 var loaded = JSON.parse(xhr.responseText);
                 loaded = loaded.response.poll;
-                that.render(loaded);
                 that.poll = loaded;
                 that.id = loaded.id;
-                callback();
+                callbacks.forEach(function(callback) {
+                    callback.call(that);
+                });
+                that.render(loaded);
             }
             this.fetchPoll(this.options.url, id, onLoad);
 
@@ -294,7 +298,9 @@
             };
             this.render(default_poll);
             this.poll = default_poll;
-            callback();
+            callbacks.forEach(function(callback) {
+                callback();
+            });
         }
     };
 

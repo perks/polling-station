@@ -68,7 +68,8 @@
 (function() {
 
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', '../assets/templates/yes-no.tmpl', true);
+    var b = document.getElementById('polling-station-script').getAttribute('data-base');
+    xhr.open('GET', b + 'assets/templates/yes-no.tmpl', true);
 
     xhr.onload = function() {
         var that = this;
@@ -162,7 +163,8 @@
                     localStorage: localStorage,
                     url: url,
                     id: poll_id,
-                    base: base
+                    base: base,
+                    dev: true
                 });
 
                 var render_tmpl = tmpl("yesno_tmpl");
@@ -171,6 +173,7 @@
 
 
                 var embed_scaffold = function(tmplFunction, elString) {
+                    console.log('scafoolding');
                     document.getElementById(elString).innerHTML = tmplFunction(this.poll);
                 };
 

@@ -114,12 +114,17 @@
         this.poll = context.poll;
         this.id = parseInt(this.options.id, 10);
 
+        this.changeEvent = document.createEvent('Event');
+        this.changeEvent.initEvent('poll-change', true, true);
 
-        this.bindToEvents = function() {
-            that.changeEvent = document.createEvent('Event');
-            that.changeEvent.initEvent('poll-change', true, true);
+        this.readyEvent = document.createEvent('Event');
+        this.readyEvent.initEvent('poll-ready', true, true);
+
+        this.defineEvents = function() {
+            console.log('definingEvents running');
             that.getElement().addEventListener('poll-change', function(e) {
                 that.unbindToEvents();
+                console.log('definingEvents caused');
                 that.swap("poll-answers", "poll-results");
                 setTimeout(function() {
                     var graphs = that.getElement().querySelectorAll('#poll-results .graph');
@@ -130,16 +135,22 @@
                     }
                 }, 300);
             });
+        };
+
+        this.bindToEvents = function() {
+            var that = this;
             var answers = that.getElement().querySelectorAll('.poll-answer');
             var answerImages = that.getElement().querySelectorAll('.poll-answer > img');
-
+            console.log('being bound to events');
             var forEach = Array.prototype.forEach;
 
             if (answers) {
+                console.log(answers);
                 forEach.call(answers, function(answer) {
                     var selection = answer.getAttribute('data-id');
                     answer.addEventListener('click', function(e) {
                         e.preventDefault();
+                        alert('clicked');
                         that.updateSelection(selection);
                         that.getElement().dispatchEvent(that.changeEvent);
                     });
@@ -182,7 +193,8 @@
             }
 
             if (!that.poll || (that.poll && (that.options.localStorage || that.options.url))) {
-                that.loadPoll(that.id, custom_callback_array.concat([that.bindToEvents]));
+                console.log('poll loading');
+                that.loadPoll(that.id, custom_callback_array.concat([that.begin.bind(that)]));
             } else {
                 that.render(that.poll);
                 custom_callback_array.forEach(function(callback) {
@@ -251,7 +263,6 @@
 
     PollingWidget.prototype.loadPoll = function(id, callbacks) {
         var callbacks = callbacks || [];
-        console.log(callbacks);
         if (!this.options.url && this.options.localStorage) {
             var loaded;
             var that = this;
@@ -262,7 +273,7 @@
             }
             this.poll = loaded;
             callbacks.forEach(function(callback) {
-                callback.call(that);
+                callback();
             });
             this.render(loaded);
 
@@ -275,7 +286,7 @@
                 that.poll = loaded;
                 that.id = loaded.id;
                 callbacks.forEach(function(callback) {
-                    callback.call(that);
+                    callback();
                 });
                 that.render(loaded);
             }
@@ -303,6 +314,11 @@
             });
         }
     };
+
+    PollingWidget.prototype.begin = function() {
+        this.defineEvents();
+        this.bindToEvents();
+    }
 
     PollingWidget.prototype.render = function(poll_data) {
         if (cookieLib.hasItem('poll-vote') && parseInt(cookieLib.getItem('poll-vote'), 10) === this.id) {

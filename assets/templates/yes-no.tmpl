@@ -11,8 +11,8 @@
             </div>
             <div id="poll-results">
                 <ul>
-                   <% for (var j = 0; i < answers.length; i++) { %>
-                    <li class="poll-result" data-id="<%=answer[j].id%>">
+                   <% for (var j = 0; j < answers.length; j++) { %>
+                    <li class="poll-result" data-id="<%=answers[j].id%>">
                       <div class="poll-result-text"></div>
                       <div class="bar">
                         <div class="graph"></div>

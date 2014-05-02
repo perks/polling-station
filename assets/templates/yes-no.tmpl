@@ -1,10 +1,10 @@
 
-            <div class="poll-prompt">What do you think?</div>
+        <div class="poll-prompt"><span>What do you think?</span></div>
             <div id="poll-question"><%=question%></div>
             <div id="poll-answers">
                 <% for (var i = 0; i < answers.length; i++) { %>
                   <div class="poll-answer" data-id="<%=answers[i].id%>">
-                    <img src="<%=answers[i].value%>.png"/>
+                    <img class ="no-share" src="<%=answers[i].value%>.png"/>
                     <span class="poll-answer-text"><%=answers[i].value%></span>
                   </div>
                 <% } %>

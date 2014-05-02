@@ -27,7 +27,6 @@
 
 });
 
-
 // Simple JavaScript Templating
 // John Resig - http://ejohn.org/ - MIT Licensed
 (function() {
@@ -63,12 +62,16 @@
     };
 })();
 
-
-
 (function() {
 
+    /**
+     * Embed by making an AJAX call to grab a template
+     * If successfull, template is used to automatically build up the DOM
+     *
+     *
+     */
     var xhr = new XMLHttpRequest();
-    var b = document.getElementById('polling-station-script').getAttribute('data-base');
+    var b = document.getElementById('polling-station-script').getAttribute('data-base') || './';
     xhr.open('GET', b + 'assets/templates/yes-no.tmpl', true);
 
     xhr.onload = function() {
@@ -88,7 +91,12 @@
 
     xhr.send();
 
-
+    /**
+     * start: Entry point for embed scaffolding
+     *
+     * @param  {String} tmplData: Raw string data of a template, gets converted into a DOM element later
+     *
+     */
     function start(tmplData) {
         var hookNode = document.getElementById('polling-station-script'),
             hookParent = hookNode.parentNode,
@@ -104,6 +112,11 @@
             });
         }
 
+        /**
+         * getOption: Loads data attributes off of the embedded script tag
+         * @param  {String} opt: String containing the attribute of the data tag, ommiting 'data-'
+         * @return {Value} value: Value of the attribute
+         */
         function getOption(opt) {
             var value;
             if (hookNode.dataset) {
@@ -115,6 +128,10 @@
             return value;
         };
 
+        /**
+         * loadCSS: Loads external css and attaches it to the page
+         * @param  {String} href : URL containing css stylesheet
+         */
         function loadCSS(href) {
             var link_tag = document.createElement('link');
             link_tag.setAttribute("type", "text/css");
@@ -123,6 +140,11 @@
             (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(link_tag);
         };
 
+        /**
+         * loadScript: Loads external scripts asynchronously, then fire a callback after when done
+         * @param  {String} src    : URL containing external script (in this case polling-station.js)
+         * @param  {Function} onLoad : Callback function
+         */
         function loadScript(src, onLoad) {
             var script_tag = document.createElement('script');
             script_tag.setAttribute("type", "text/javascript");
@@ -140,6 +162,10 @@
             (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
         };
 
+        /**
+         * [init description]
+         * @return {[type]} [description]
+         */
         function init() {
 
             var url = getOption('url') || '';
@@ -151,6 +177,7 @@
 
             if (css) loadCSS(css);
 
+            //arguments need to be binded for delayed invocatio
             loadScript(lib, main.bind(null, url, localStorage, poll_id, base));
         };
 

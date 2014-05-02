@@ -1,26 +1,22 @@
 $pollBorderColor: #c1c1c1;
-$pollTextColor: #3e3e3e;
-$pollPromptColor: #fe9e08;
-$pollGraphYesColor: #147bff;
-$pollGraphNoColor: #fe9e08;
-
-$pollWidth: 800px;
-$pollHeight: 300px;
-
-$fontWeightLight: 300 !default;
-$fontWeightBook: 400 !default;
-$fontWeightMedium: 500 !default;
-
-
-
-@mixin transition($transition-property, $transition-time, $method) {
+ $pollTextColor: #3e3e3e;
+ $pollPromptColor: #fe9e08;
+ $pollGraphYesColor: #147bff;
+ $pollGraphNoColor: #fe9e08;
+ $pollWidth: 800px;
+ $pollHeight: 300px;
+ $sansFontFamily:"freight-sans-pro", Helvetica, Arial, sans-serif !default;
+ $fontWeightLight: 300 !default;
+ $fontWeightBook: 400 !default;
+ $fontWeightMedium: 500 !default;
+ $fontWeightSemiBold: 600 !default;
+ @mixin transition($transition-property, $transition-time, $method) {
     -webkit-transition: $transition-property $transition-time $method;
     -moz-transition: $transition-property $transition-time $method;
     -ms-transition: $transition-property $transition-time $method;
     -o-transition: $transition-property $transition-time $method;
     transition: $transition-property $transition-time $method;
 }
-
 @mixin animation($animation-name, $animation-time) {
     -webkit-animation: $animation-name $animation-time;
     -webkit-animation: $animation-name $animation-time;
@@ -29,8 +25,7 @@ $fontWeightMedium: 500 !default;
     -o-animation: $animation-name $animation-time;
     animation: $animation-name $animation-time;
 }
-
-@mixin keyframes( $animation-name ) {
+@mixin keyframes($animation-name) {
     @-webkit-keyframes $animation-name {
         @content;
     }
@@ -44,140 +39,119 @@ $fontWeightMedium: 500 !default;
         @content;
     }
 }
-
 #polling-station {
-  position: relative;
-  top: 50px;
-  border-bottom: 1px solid $pollBorderColor;
-  color: $pollTextColor;
-  font-family: "freight-sans-pro", Helvetica, Arial, sans-serif;
-  margin: 0 auto;
-  max-width: $pollWidth;
-  height: $pollHeight;
-
-  -webkit-backface-visibility: hidden;
-
-  @include animation(fadein, 1.5s);
-
+    border-bottom: 1px solid $pollBorderColor;
+    color: $pollTextColor;
+    font-family:$sansFontFamily;
+    margin: 50px auto;
+    max-width: $pollWidth;
+    min-height: $pollHeight;
+    -webkit-backface-visibility: hidden;
+    @include animation(fadein, 1.5s);
 }
-
 .poll-prompt {
-  font-size: 12px;
-  font-weight: $fontWeightBook;
-  letter-spacing: 2px;
-  color: $pollPromptColor;
-  margin-top: 30px;
-  text-align: center;
-  text-transform: uppercase;
-  display: table;
-  white-space: nowrap;
-  &:before, &:after {
-    border-top: 1px solid $pollBorderColor;
-    content: '';
-    display: table-cell;
-    position: relative;
-    top: 0.5em;
-    width: 45%;
-  }
-  &:before {
-    right: 1.5%;
-  }
-  &:after {
-    left: 1.5%;
-  }
-}
-
-#poll-question {
-  position: relative;
-  top: 20px;
-  margin: 0 auto;
-  font-size: 20px;
-  text-align: center;
-  font-weight: $fontWeightBook;
-}
-
-#poll-answers {
-  position: relative;
-  padding-left: 0px;
-  margin: 0 auto;
-  top: 20px;
-  padding-right: 20px;
-  text-align: center;
-}
-
-.poll-answer {
-  display: inline-block;
-  text-align: center;
-  padding: 40px 20px 20px 20px;
-  > .poll-answer-text {
-    display: block;
-  }
-}
-
-#poll-results {
-  display: none;
-  position: relative;
-  top: 20%;
-  left: 5%;
-
-  @include animation(fadein, 1.5s);
-
-  > ul {
-    list-style: none;
-    padding-left: 0px;
-  }
-  .poll-result-text {
-    position: relative;
+    width:100%;
+    text-align:center;
+    border-bottom: 1px solid #000;
+    line-height:0.1em;
+    margin:10px 0 20px;
+    border-color: $pollBorderColor;
     text-transform: uppercase;
-    letter-spacing: 3px;
-    font-size: 30px;
-    width: 15%;
+    font-weight: $fontWeightMedium;
+    letter-spacing: 2px;
+    font-size: 18px;
+    span {
+        background:#fff;
+        color: $pollPromptColor;
+        padding:10px 10px;
+    }
+}
+#poll-question {
+    margin: 0 auto;
+    font-size: 34px;
     text-align: center;
-    float: left;
-    font-weight: $fontWeightLight;
-  }
-  .bar {
-    position: relative;
-    float: right;
-    width: 85%;
-    top: 10px;
-  }
-  .graph {
-    height: 7px;
-  }
-  .graph-caption {
-    font-size: 12px;
-  }
-  li {
-    clear: both;
-  }
-  .graph {
-    @include transition(width, 2s, ease-in-out);
-    width: 0px;
-  }
+    line-height: 40px;
+    font-weight: $fontWeightMedium;
+}
+#poll-answers {
+    padding-left: 0px;
+    margin: 40px auto;
+    text-align: center;
+    margin-top: 30px;
+}
+.poll-answer {
+    display: inline-block;
+    text-align: center;
+    margin: 10px 40px;
+    > .poll-answer-text {
+        display: block;
+        font-weight: $fontWeightMedium;
+        font-size: 20px;
+        text-transform: uppercase;
+    }
+}
+#poll-results {
+    display: none;
+    margin-left: 10px;
+    margin-top: 40px;
+    @include animation(fadein, 1.5s);
+    > ul {
+        list-style: none;
+        padding-left: 0px;
+    }
+    .poll-result-text {
+        position: relative;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-size: 30px;
+        width: 10%;
+        text-align: center;
+        float: left;
+        font-weight: $fontWeightLight;
+    }
+    .bar {
+        float: right;
+        width: 85%;
+    }
+    .graph {
+        height: 7px;
+        margin-top: 12px
+    }
+    .poll-result-caption {
+        font-size: 14px;
+    }
+    li {
+        clear: both;
+    }
+    .graph {
+        @include transition(width, 2s, ease-in-out);
+        width: 0px;
+    }
+}
+
+.poll-bottom {
+  clear: both;
+  padding-bottom: 30px;
 }
 
 @media only screen and (min-width: 320px) and (max-width: 480px) {
-  #poll-results .bar {
-    width: 80%;
-  }
+    #poll-results .bar {
+        width: 80%;
+    }
 }
-
 .poll-result {
-  &[data-id="1"] .graph {
-    background-color: $pollGraphYesColor;
-  }
-  &[data-id="3"] .graph {
-    background-color: $pollGraphNoColor;
-  }
+    &[data-id="1"] .graph {
+        background-color: $pollGraphYesColor;
+    }
+    &[data-id="3"] .graph {
+        background-color: $pollGraphNoColor;
+    }
 }
-
 @include keyframes(fadein) {
-  from: {
-    opacity: 0;
-  }
-
-  to: {
-    opacity: 1;
-  }
+    from: {
+        opacity: 0;
+    }
+    to: {
+        opacity: 1;
+    }
 }

@@ -78,7 +78,7 @@ The following HTML schema is needed when writting static HTML elements to the pa
 
 Note that there is not much flexibility in rendering the DOM, the default templating function will overwrite anything that does not conform to this standard.
 
-To tweak this behaviour, simply modify `default_template_func` within the **PollingWidget** function declaration
+To tweak this behaviour, simply modify `default_template_func` within the **PollingStation** function declaration
 
 
 #### Templating function
@@ -89,7 +89,7 @@ Here is an example using a Handlebars template:
 
 ```javascript
 var myCustomTemplateFunc = Handlebars.compile(document.getElementById('poll-template').innerHTML);
-var myPoll = new PollingWidget({
+var myPoll = new PollingStation({
     url: "http://myapirooturl.com/api",
     template: myCustomTemplateFunc
 });
@@ -104,7 +104,7 @@ myPoll.init();
 The polling widget object is created with a *context* argument that provides instructions for how you want to set up the poll. Here is an example
 
 ```javascript
-    var myPollingWidget = new PollingWidget({
+    var myPollingStation = new PollingStation({
         el: '#idOfWidgetDiv', // this defaults to #polling-widget
         url: 'http://myapirooturl.com/api', // this defaults to ''
     });
@@ -130,7 +130,7 @@ var local_poll_data = {
         "total": 0
     }
 
-var myPollingWidget = new PollingWidget({
+var myPollingStation = new PollingStation({
     poll: local_poll_data,
     localStorage: true
 });
@@ -139,7 +139,7 @@ var myPollingWidget = new PollingWidget({
 
 Then, once instantiated, start polling with:
 ```javascript
-    myPollingWidget.init();
+    myPollingStation.init();
 ```
 Which will render the poll into the DOM and set up the event binding
 

@@ -130,7 +130,6 @@
 
             if (script_tag.readyState) {
                 script_tag.onreadystatechange = function() {
-                    console.log('x')
                     if (this.readyState == 'complete' || this.readyState == 'loaded') {
                         onLoad();
                     }
@@ -159,25 +158,27 @@
 
             domready(function() {
 
-                var myPoll = new PollingWidget({
+                var render_tmpl = tmpl("yesno_tmpl");
+
+                var myPoll = new PollingStation({
                     localStorage: localStorage,
                     url: url,
                     id: poll_id,
                     base: base,
-                    dev: true
+                    dev: true,
+                    template: render_tmpl.bind(this)
                 });
 
-                var render_tmpl = tmpl("yesno_tmpl");
 
-                var pollDom = document.getElementById('polling-station');
-
-
-                var embed_scaffold = function(tmplFunction, elString) {
-                    console.log('scafoolding');
-                    document.getElementById(elString).innerHTML = tmplFunction(this.poll);
+                var image_scaffold = function(base) {
+                    var imgs = (document.getElementById('poll-answers').querySelectorAll('img'));
+                    for (var index = 0; index < imgs.length; index++) {
+                        //Prepend our base url to the image tags
+                        imgs[index].src = base + "assets/img/" + imgs[index].src.substr(imgs[index].src.lastIndexOf("/")+1);
+                    }
                 };
 
-                myPoll.init([embed_scaffold.bind(myPoll, render_tmpl, "polling-station")]);
+                myPoll.init([image_scaffold.bind(null, base)]);
 
             });
 

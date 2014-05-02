@@ -19,10 +19,10 @@ var poll_stub = {
     "total": 0
 };
 
-var testPoll = new PollingWidget();
+var testPoll = new PollingStation();
 
 
-describe('PollingWidget', function() {
+describe('PollingStation', function() {
     describe('Constructor', function() {
         it('should initialize a default "id" property', function() {
             testPoll.should.have.property('id').and.should.not.be.null;

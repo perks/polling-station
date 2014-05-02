@@ -45,7 +45,7 @@ $fontWeightMedium: 500 !default;
     }
 }
 
-#polling-widget {
+#polling-station {
   position: relative;
   top: 50px;
   border-bottom: 1px solid $pollBorderColor;
@@ -167,7 +167,7 @@ $fontWeightMedium: 500 !default;
   &[data-id="1"] .graph {
     background-color: $pollGraphYesColor;
   }
-  &[data-id="2"] .graph {
+  &[data-id="3"] .graph {
     background-color: $pollGraphNoColor;
   }
 }

@@ -1,11 +1,11 @@
-      <div id="polling-widget" class="polling-widget">
+
             <div class="poll-prompt">What do you think?</div>
-            <div id="poll-question"></div>
+            <div id="poll-question"><%=question%></div>
             <div id="poll-answers">
                 <% for (var i = 0; i < answers.length; i++) { %>
                   <div class="poll-answer" data-id="<%=answers[i].id%>">
-                    <img/>
-                    <span class="poll-answer-text"></span>
+                    <img src="<%=answers[i].value%>.png"/>
+                    <span class="poll-answer-text"><%=answers[i].value%></span>
                   </div>
                 <% } %>
             </div>
@@ -13,15 +13,15 @@
                 <ul>
                    <% for (var j = 0; j < answers.length; j++) { %>
                     <li class="poll-result" data-id="<%=answers[j].id%>">
-                      <div class="poll-result-text"></div>
+                      <div class="poll-result-text"><%=answers[j].value%></div>
                       <div class="bar">
                         <div class="graph"></div>
-                        <div class="poll-result-caption"></div>
+                        <div class="poll-result-caption"><%=answers[j].percent%>% (<%=answers[j].count%> votes) </div>
                       </div>
                     </li>
                     <% } %>
                 </ul>
             </div>
             <div class="poll-bottom"></div>
-        </div>
+
 

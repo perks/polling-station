@@ -27,7 +27,7 @@ module.exports = function(grunt) {
                 options: {
                     sassDir: './assets/scss',
                     cssDir: './assets/css',
-                    outputStyle: 'compressed',
+                    // outputStyle: 'compressed',
                 }
             }
         },

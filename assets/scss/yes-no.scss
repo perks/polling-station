@@ -4,7 +4,7 @@ $pollBorderColor: #c1c1c1;
  $pollGraphYesColor: #147bff;
  $pollGraphNoColor: #fe9e08;
  $pollWidth: 800px;
- $pollHeight: 300px;
+ $pollHeightConstant: 128px;
  $sansFontFamily:"freight-sans-pro", Helvetica, Arial, sans-serif !default;
  $fontWeightLight: 300 !default;
  $fontWeightBook: 400 !default;
@@ -45,7 +45,7 @@ $pollBorderColor: #c1c1c1;
     font-family:$sansFontFamily;
     margin: 50px auto;
     max-width: $pollWidth;
-    min-height: $pollHeight;
+    // min-height: $pollHeight;
     -webkit-backface-visibility: hidden;
     @include animation(fadein, 1.5s);
 }
@@ -54,7 +54,7 @@ $pollBorderColor: #c1c1c1;
     text-align:center;
     border-bottom: 1px solid #000;
     line-height:0.1em;
-    margin:10px 0 20px;
+    margin:10px auto;
     border-color: $pollBorderColor;
     text-transform: uppercase;
     font-weight: $fontWeightMedium;
@@ -67,7 +67,7 @@ $pollBorderColor: #c1c1c1;
     }
 }
 #poll-question {
-    margin: 0 auto;
+    margin: auto 24px;
     font-size: 34px;
     text-align: center;
     line-height: 40px;
@@ -75,14 +75,13 @@ $pollBorderColor: #c1c1c1;
 }
 #poll-answers {
     padding-left: 0px;
-    margin: 40px auto;
+    margin: 40px 24px;
     text-align: center;
-    margin-top: 30px;
 }
 .poll-answer {
     display: inline-block;
     text-align: center;
-    margin: 10px 40px;
+    margin: 10px 5%;
     > .poll-answer-text {
         display: block;
         font-weight: $fontWeightMedium;
@@ -92,8 +91,8 @@ $pollBorderColor: #c1c1c1;
 }
 #poll-results {
     display: none;
-    margin-left: 10px;
-    margin-top: 40px;
+    height: $pollHeightConstant;
+    margin: 40px 24px;
     @include animation(fadein, 1.5s);
     > ul {
         list-style: none;
@@ -103,23 +102,24 @@ $pollBorderColor: #c1c1c1;
         position: relative;
         text-transform: uppercase;
         letter-spacing: 3px;
-        font-size: 30px;
-        width: 10%;
+        font-size: 46px;
+        width: 20%;
         text-align: center;
         float: left;
-        line-height: 40px;
+        line-height: 70px;
         font-weight: $fontWeightLight;
     }
     .bar {
         float: right;
-        width: 85%;
+        width: 80%;
+        margin-top: 24px;
     }
     .graph {
-        height: 7px;
-        margin-top: 12px
+        height: 11px;
     }
     .poll-result-caption {
-        font-size: 14px;
+        font-size: 16px;
+        letter-spacing: 1.5px;
     }
     li {
         clear: both;
@@ -129,15 +129,24 @@ $pollBorderColor: #c1c1c1;
         width: 0px;
     }
 }
-
 .poll-bottom {
-  clear: both;
-  padding-bottom: 30px;
+    clear: both;
+    padding-bottom: 30px;
 }
-
-@media only screen and (min-width: 320px) and (max-width: 480px) {
+@media all and (min-width: 420px) and (max-width: 640px) {
     #poll-results .bar {
-        width: 80%;
+        width: 75%;
+    }
+}
+@media all and (min-width: 320px) and (max-width: 419px) {
+    #poll-results {
+        .bar {
+            width: 60%;
+            margin-top: 22px;
+        }
+        .poll-result-text {
+            width: 35%;
+        }
     }
 }
 .poll-result {

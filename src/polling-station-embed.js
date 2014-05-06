@@ -183,7 +183,7 @@
 
         function main(url, localStorage, poll_id, base) {
 
-            domready(function() {
+            // domready(function() {
 
                 var render_tmpl = tmpl("yesno_tmpl");
 
@@ -207,7 +207,7 @@
 
                 myPoll.init([image_scaffold.bind(null, base)]);
 
-            });
+            // });
 
         };
 

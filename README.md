@@ -1,22 +1,22 @@
-# Work in Progress
-Program code may be out of sync with documentation
-
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-# Table of Contents
-*generated with [DocToc](http://doctoc.herokuapp.com/)*
+#Table of Contents 
 
-- [polling-station.js](#polling-station.js)
+- [polling-station.js](#polling-stationjs)
 	- [Description](#description)
 	- [Version](#version)
 	- [Installation](#installation)
+		- [Building and Testing](#building-and-testing)
 	- [Usage](#usage)
 		- [Set up the data for the poll](#set-up-the-data-for-the-poll)
 		- [HTML hooks and template rendering](#html-hooks-and-template-rendering)
 			- [Static HTML](#static-html)
+				- [Basic:](#basic)
+				- [Advanced:](#advanced)
 			- [Templating function](#templating-function)
 		- [Instantiate  and start the polling widget](#instantiate--and-start-the-polling-widget)
+	- [Embed Script:](#embed-script)
 	- [TODO:](#todo)
 	- [Suggestions/Feedback](#suggestionsfeedback)
 	- [Copyright](#copyright)
@@ -32,7 +32,9 @@ polling-station.js
 A standalone library that creates scaffolding for interactive polls and questionnaires.
 Has support for saving and fetching from HTML5 localstorage as well as remote API endpoints
 
-Written in 100% plain-jane vanilla JavaScript
+Written in 100% vanilla JavaScript
+
+Developed with ♡ at PolicyMic
 
 
 
@@ -45,8 +47,16 @@ Written in 100% plain-jane vanilla JavaScript
 Include the library in your polling page as followed:
 
 ```html
-<script src="vanilla-poll.js"></script>
+<script src="polling-station.min.js"></script>
 ```
+
+### Building and Testing
+
+Run `grunt build` to produce minified versions of the scripts into the *dist/* folder
+
+Run `grunt mocha` to run unit tests using Mocha BDD assertions and Phantom-JS (npm install will provide these dependencies)
+
+Run `grunt server` to enable browser-sync and livereload of testing development (css + js) on localhost:8080
 
 ## Usage
 
@@ -57,7 +67,7 @@ The poll-data object must be set with the following schema:
 Property | Subpropertes | Description
 :----| :----| :-----
 **_question_** | | The prompt of the poll; the question being asked
-**_answers_** | *value*, *count*, *percent* | An array of objects that represent the options avaliable for selection <br> <ul><li>*value*: The description of the selection</li><li>*count*: Number of votes on this current selection<li>*percent*: A numeric value between 0-100 that represents the ratio of this selection to the poll total</ul>
+**_answers_** | *id*, *value*, *count*, *percent* | An array of objects that represent the options avaliable for selection <br> <ul><li>*id*: Represents the ID of the particular vote option</li><li>*value*: The description of the selection</li><li>*count*: Number of votes on this current selection<li>*percent*: A numeric value between 0-100 that represents the ratio of this selection to the poll total</ul>
 **total** |  | The total amount of votes made for all selections in the poll
 
 ### HTML hooks and template rendering
@@ -70,15 +80,42 @@ From this there are two ways to proceed:
 
 The following HTML schema is needed when writting static HTML elements to the page:
 
-*   Element with CSS id **#polling-question** to display poll question
+##### Basic:
+
+*   Element with CSS id **#poll-question** to display poll question
 *   Container elements with CSS id **#poll-answers** and **#poll-results**
     as respective parents (this can be a `<div` or `<ul>`, etc)
-*   Individual elements with CSS group **.poll-answer** and **.poll-result** respectively
-    nested under their parent container element, along with a data attribute **data-id** which corresponds to the index # of the poll-data object
+*   Individual elements with CSS group **.poll-answer** and **.poll-result** 
+    nested under their parent container element, along with a data attribute **data-id** which corresponds to the *ID* field of their respective *answer* property
+
+##### Advanced:
+*   For image scaffolding, make sure that an empy `<img/` tag is situated within your **.poll-answer** groups.
+*   **.poll-answer-text** will fetch the answer selection option and display it within this element
+*   For dynamic and animated graphs, be sure to construct your **#poll-resuls** element as followed:
+```html
+    <div id="poll-results">
+            <ul>
+                <li class="poll-result" data-id="1">
+                    <div class="poll-result-text"></div>
+                    <div class="bar">
+                        <div class="graph"></div>
+                        <div class="poll-result-caption"></div>
+                    </div>
+                </li>
+                <li class="poll-result" data-id="2">
+                    <div class="poll-result-text"></div>
+                    <div class="bar">
+                        <div class="graph"></div>
+                        <div class="poll-result-caption"></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+```
 
 Note that there is not much flexibility in rendering the DOM, the default templating function will overwrite anything that does not conform to this standard.
 
-To tweak this behaviour, simply modify `default_template_func` within the **PollingStation** function declaration
+To tweak this behaviour, simply modify `defaultTemplateFunc` within the **PollingStation.prototype** declaration
 
 
 #### Templating function
@@ -97,7 +134,7 @@ var myPoll = new PollingStation({
 myPoll.init();
 ```
 
-
+Note that in the embed script, a mini templating engine is used to dynamically construct the DOM, see the source code for more information.
 
 ### Instantiate  and start the polling widget
 
@@ -144,14 +181,39 @@ Then, once instantiated, start polling with:
 Which will render the poll into the DOM and set up the event binding
 
 
+## Embed Script:
+
+This entire package can also be run as a single, embeddable script tag that allows for portability ease-of-use.
+
+For reference, the script tag appears as follows:
+```html
+<script data-base="../" data-url="http://remote-end-point" data-localStorage="true" 
+data-css="assets/css/yes-no.css" data-lib="src/polling-station.js" 
+src="../src/polling-station-embed.js" data-poll-id="5" id="polling-station-script"></script>
+```
+
+And as a result consists of the following fields:
+
+Attribute | Required ? | Description
+:----| :----| :-----
+**_data-base_** | **Yes** | The path of the base folder, in which every other folder and resource is located. This can be local to the script itself, or at a remote URL path
+**_data-url_** | No | Represents the API end point host URL if doing remote persistent polling
+**_data-localStorage_** | No | Set if you wish to have localStorage fetching on the poll
+**_data-css_** | No(But recommended) | The path to an external CSS styling sheet _relative to the base path you provided_
+**_data-lib_** | **Yes** | The path to the polling-station.js library _relative to the base path you provided_
+**_data-poll-id_** | No | The ID of the poll to fetch and save to if you are using localStorage or remote API persistence
+**_id_** | **Yes** | Identifer of the `<script>` tag, must be called *#polling-station-script*
+**_src_** | **Yes** | The path to the polling-station embed script, _relative to the base path you provided_
+
+
+Note that when using the embeddable script, you may wish to assign callbacks to happen for event binding that occurs after the poll has been rendered and instantiated. In that case, see the source code for how to pass in callbacks to the `init()` call -- in the example we use this functionality to allow for event binding on the image hovers
+
+Also of note is the fact that CSS styles are completely customizable and up to the user. Many of the effects in the demoes are a result of tweaking CSS to fit specific needs (mainly that of a Yes-No poll). You will have to implement custom solutions for various other polls.
+
 ## TODO:
 
 *   Context argument description
-*   Various behaviours
-*   Source documentation + function descriptions
-*   Describe embed script
-*   Build tools w/ Grunt
-
+*   Elaborate behaviours/bugs
 
 
 ## Suggestions/Feedback

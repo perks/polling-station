@@ -5,45 +5,61 @@
     <meta charset="utf-8">
     <title>Polling widget test</title>
     <link href="../assets/css/yes-no.css" rel="stylesheet">
+    <script type="text/javascript">
+    WebFontConfig = {
+        google: {
+            families: ['Lato:400,300,100italic,700,900:latin']
+        }
+    };
+    (function() {
+        var wf = document.createElement('script');
+        wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+            '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+        wf.type = 'text/javascript';
+        wf.async = 'true';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(wf, s);
+    })();
+    </script>
 </head>
 
 <body>
 
-        <div id="polling-station" class="polling-station">
-            <div class="poll-prompt">What do you think?</div>
-            <div id="poll-question"></div>
-            <div id="poll-answers">
+    <div id="polling-station" class="polling-station">
+        <div class="poll-prompt">What do you think?</div>
+        <div id="poll-question"></div>
+        <div id="poll-answers">
 
-                <div class="poll-answer" data-id="1">
-                    <img/>
-                    <span class="poll-answer-text"></span>
-                </div>
+            <div class="poll-answer" data-id="1">
+                <img/>
+                <span class="poll-answer-text"></span>
+            </div>
 
-                <div class="poll-answer" data-id="2">
-                    <img src="" alt="">
-                    <span class="poll-answer-text"></span>
-                </div>
+            <div class="poll-answer" data-id="2">
+                <img src="" alt="">
+                <span class="poll-answer-text"></span>
             </div>
-            <div id="poll-results">
-                <ul>
-                    <li class="poll-result" data-id="1">
-                        <div class="poll-result-text"></div>
-                        <div class="bar">
-                            <div class="graph"></div>
-                            <div class="poll-result-caption"></div>
-                        </div>
-                    </li>
-                    <li class="poll-result" data-id="2">
-                        <div class="poll-result-text"></div>
-                         <div class="bar">
-                            <div class="graph"></div>
-                            <div class="poll-result-caption"></div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="poll-bottom"></div>
         </div>
+        <div id="poll-results">
+            <ul>
+                <li class="poll-result" data-id="1">
+                    <div class="poll-result-text"></div>
+                    <div class="bar">
+                        <div class="graph"></div>
+                        <div class="poll-result-caption"></div>
+                    </div>
+                </li>
+                <li class="poll-result" data-id="2">
+                    <div class="poll-result-text"></div>
+                    <div class="bar">
+                        <div class="graph"></div>
+                        <div class="poll-result-caption"></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="poll-bottom"></div>
+    </div>
 
 
     <script src="../src/polling-station.js"></script>
@@ -81,4 +97,3 @@
 </body>
 
 </html>
-

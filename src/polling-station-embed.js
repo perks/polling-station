@@ -163,8 +163,8 @@
         };
 
         /**
-         * [init description]
-         * @return {[type]} [description]
+         * init: Scaffolds external files and bootstraps data into launching the poll in "main()" invocation
+         *
          */
         function init() {
 
@@ -177,13 +177,14 @@
 
             if (css) loadCSS(css);
 
-            //arguments need to be binded for delayed invocatio
+            //arguments need to be binded for delayed invocation
             loadScript(lib, main.bind(null, url, localStorage, poll_id, base));
         };
 
+
         function main(url, localStorage, poll_id, base) {
 
-            // domready(function() {
+            domready(function() {
 
                 var render_tmpl = tmpl("yesno_tmpl");
 
@@ -193,10 +194,19 @@
                     id: poll_id,
                     base: base,
                     dev: true,
-                    template: render_tmpl.bind(this)
+                    template: render_tmpl
                 });
 
+                /**
+                 * Define Function Callbacks here!
+                 *
+                 * Remember to bind them with any arguments!
+                 *
+                 */
 
+                /**
+                 * image_scaffold: custom callback function required for embed demo
+                 */
                 var image_scaffold = function(base) {
                     var imgs = (document.getElementById('poll-answers').querySelectorAll('img'));
                     for (var index = 0; index < imgs.length; index++) {
@@ -205,9 +215,9 @@
                     }
                 };
 
-                myPoll.init([image_scaffold.bind(null, base)]);
+                myPoll.init([image_scaffold.bind(null, base)]); //bind callbacks before passing them
 
-            // });
+            });
 
         };
 

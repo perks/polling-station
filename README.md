@@ -34,7 +34,11 @@ Has support for saving and fetching from HTML5 localstorage as well as remote AP
 
 Written in 100% vanilla JavaScript
 
-Developed with ♡ at PolicyMic
+
+
+_Developed with :heart: at PolicyMic_
+
+====
 
 
 

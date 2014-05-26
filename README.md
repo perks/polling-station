@@ -60,7 +60,7 @@ Run `grunt build` to produce minified versions of the scripts into the *dist/* f
 
 Run `grunt mocha` to run unit tests using Mocha BDD assertions and Phantom-JS (npm install will provide these dependencies)
 
-Run `grunt server` to enable browser-sync and livereload of testing development (css + js) on localhost:8080
+Run `grunt server` to enable browser-sync and livereload of testing development (css + js) on localhost:8080. Afterwards, view the pages in *examples/* folder  with your browser to see demos of various ways to construct a poll
 
 ## Usage
 

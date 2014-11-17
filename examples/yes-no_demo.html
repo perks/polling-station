@@ -26,7 +26,7 @@
 <body>
 
     <div id="polling-station" class="polling-station">
-        <div class="poll-prompt">What do you think?</div>
+      <div class="poll-prompt"><span>What do you think?</span></div>
         <div id="poll-question"></div>
         <div id="poll-answers">
 
@@ -85,9 +85,11 @@
 
     var myPoll = new PollingStation({
         dev: true,
-        url: "http://api.policymic.com/v1",
         id: 5,
-        base: '../'
+        base: '../',
+        poll: p,
+        localStorage: true,
+        dev: true
     });
 
     console.log('initing poll');

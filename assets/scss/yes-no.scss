@@ -50,11 +50,23 @@ $pollBorderColor: #c1c1c1;
     @include animation(fadein, 1.5s);
 }
 .poll-prompt {
-    width:100%;
+    position: relative;
+    z-index: 1;
+
+    &:before {
+      border-bottom:1px solid #000;
+      content:"";
+      margin: 0 auto;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 95%;
+      z-index: -1;
+    }
     text-align:center;
-    border-bottom: 1px solid #000;
     line-height:0.1em;
-    margin:10px auto;
     border-color: $pollBorderColor;
     text-transform: uppercase;
     font-weight: $fontWeightMedium;
@@ -63,11 +75,11 @@ $pollBorderColor: #c1c1c1;
     span {
         background:#fff;
         color: $pollPromptColor;
-        padding:10px 10px;
+        padding:5px 10px;
     }
 }
 #poll-question {
-    margin: auto 24px;
+    margin: 34px 24px;
     font-size: 34px;
     text-align: center;
     line-height: 40px;
@@ -153,7 +165,7 @@ $pollBorderColor: #c1c1c1;
     &[data-id="1"] .graph {
         background-color: $pollGraphYesColor;
     }
-    &[data-id="3"] .graph {
+    &[data-id="2"] .graph {
         background-color: $pollGraphNoColor;
     }
 }

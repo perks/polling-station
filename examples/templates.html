@@ -3,14 +3,14 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Polling widget test</title>
+    <title>Polling station test</title>
 </head>
 
 <body>
-    <h1>Polling Widget test</h1>
+    <h1>Polling station test</h1>
 
     <section id="polling-container">
-        <div id="polling-widget" class="polling-widget">
+        <div id="polling-station" class="polling-station">
         </div>
     </section>
 
@@ -75,7 +75,9 @@
     var myCustomTemplateFunc = Handlebars.compile(document.getElementById('poll-template').innerHTML);
     var myPoll = new PollingStation({
         poll: p,
-        template: myCustomTemplateFunc
+        template: myCustomTemplateFunc,
+        localStorage: true,
+        dev: true
     });
 
     myPoll.init();

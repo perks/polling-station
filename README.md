@@ -191,7 +191,7 @@ This entire package can also be run as a single, embeddable script tag that allo
 
 For reference, the script tag appears as follows:
 ```html
-<script data-base="../" data-url="http://remote-end-point" data-localStorage="true" 
+<script data-base="../" data-url="http://remote-end-point" data-localstorage="true" 
 data-css="assets/css/yes-no.css" data-lib="src/polling-station.js" 
 src="../src/polling-station-embed.js" data-poll-id="5" id="polling-station-script"></script>
 ```
@@ -202,7 +202,7 @@ Attribute | Required ? | Description
 :----| :----| :-----
 **_data-base_** | **Yes** | The path of the base folder, in which every other folder and resource is located. This can be local to the script itself, or at a remote URL path
 **_data-url_** | No | Represents the API end point host URL if doing remote persistent polling
-**_data-localStorage_** | No | Set if you wish to have localStorage fetching on the poll
+**_data-localstorage_** | No | Set if you wish to have localStorage fetching on the poll
 **_data-css_** | No(But recommended) | The path to an external CSS styling sheet _relative to the base path you provided_
 **_data-lib_** | **Yes** | The path to the polling-station.js library _relative to the base path you provided_
 **_data-poll-id_** | No | The ID of the poll to fetch and save to if you are using localStorage or remote API persistence

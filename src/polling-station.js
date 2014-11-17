@@ -64,7 +64,7 @@ By Chris Evans, developed with love at PolicyMic
             el: '#polling-station',
             url: '',
             localStorage: false,
-            dev: true,
+            dev: false,
             base: './',
 
             template: this.defaultTemplateFunc,
@@ -144,6 +144,7 @@ By Chris Evans, developed with love at PolicyMic
                     if (graphs) {
                         for (var i = 0; i < graphs.length; i++) {
                             graphs[i].style.width = that.poll.answers[i].percent + "%";
+                            console.log(that.poll.answers[i].percent);
                         }
                     }
                 }
@@ -408,8 +409,8 @@ By Chris Evans, developed with love at PolicyMic
         if (!this.options.url && this.options.localStorage) {
             var loaded;
             var that = this;
-            if (localStorage.getItem('poll' + id)) {
-                loaded = JSON.parse(localStorage.getItem('poll' + id));
+            if (localStorage.getItem('poll-' + id)) {
+                loaded = JSON.parse(localStorage.getItem('poll-' + id));
             } else {
                 loaded = this.poll
             }

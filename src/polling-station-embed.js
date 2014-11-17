@@ -170,19 +170,38 @@
 
             var url = getOption('url') || '';
             var base = getOption('base') || './';
-            var localStorage = getOption('localStorage') || false;
+            var localStorage = getOption('localstorage') || false;
             var css = base + getOption('css') || base + 'assets/css/default.css';
             var lib = base + getOption('lib') || base + 'dist/polling-station-min.js';
             var poll_id = parseInt(getOption('poll-id'), 10) || 1;
 
+            if (!url) {
+                var p = {
+                    "id": 1,
+                    "question": "Did I want a default data model?",
+                    "answers": [{
+                        "id": 1,
+                        "value": "Yes",
+                        "count": 10,
+                        "percent": 33
+                    }, {
+                        "id": 2,
+                        "value": "No",
+                        "count": 20,
+                        "percent": 66
+                    }],
+                    "total": 0
+                }
+            }
+
             if (css) loadCSS(css);
 
             //arguments need to be binded for delayed invocation
-            loadScript(lib, main.bind(null, url, localStorage, poll_id, base));
-        };
+            loadScript(lib, main.bind(null, url, localStorage, poll_id, base, p));
 
+         };
 
-        function main(url, localStorage, poll_id, base) {
+        function main(url, localStorage, poll_id, base, poll) {
 
             domready(function() {
 
@@ -194,6 +213,7 @@
                     id: poll_id,
                     base: base,
                     dev: true,
+                    poll: poll,
                     template: render_tmpl
                 });
 

@@ -3,14 +3,14 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Polling widget test</title>
+    <title>Polling station test</title>
 </head>
 
 <body>
-    <h1>Polling Widget test</h1>
+    <h1>Polling station test</h1>
 
 
-        <div id="polling-widget" class="polling-widget">
+        <div id="polling-station" class="polling-station">
             <h1 id="poll-question"></h1>
             <ul id="poll-answers">
                 <li class="poll-answer" data-id="1"></li>
@@ -23,7 +23,7 @@
         </div>
 
 
-    <script src="../dist/polling-station.min.js"></script>
+        <script src="../src/polling-station.js"></script>
 
     <script type="text/javascript">
     //Example use//
@@ -46,7 +46,9 @@
     }
 
     var myPoll = new PollingStation({
-        poll: p
+      poll: p,
+      localStorage: true,
+      dev: true
     });
 
     myPoll.init();

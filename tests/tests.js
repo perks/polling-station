@@ -19,8 +19,7 @@ var poll_stub = {
     "total": 0
 };
 
-var testPoll = new PollingStation();
-
+var testPoll = new PollingStation(poll_stub);
 
 describe('PollingStation', function() {
     describe('Constructor', function() {
